@@ -1,11 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
-	font-family: "Inter";
-	src: url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+	font-family: "Rubik";
+	src: url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 }
 
 @layer utilities {
@@ -219,12 +220,12 @@
   before:top-[var(--thumb-border)] before:left-[var(--thumb-border)]
   before:h-[calc(100%-var(--thumb-border)*2)] 
   before:w-[calc((100%/2)-(var(--thumb-border)*2))]
-  checked:before:trangray-x-[calc(100%+(var(--thumb-border)*2))];
+  checked:before:translate-x-[calc(100%+(var(--thumb-border)*2))];
 	}
 
 	.form-switch.outline {
 		@apply before:w-[calc((100%/2)-(var(--thumb-border)*2)-1px)]
-  checked:before:trangray-x-[calc(100%+(var(--thumb-border)*2)+2px)];
+  checked:before:translate-x-[calc(100%+(var(--thumb-border)*2)+2px)];
 	}
 
 	.form-radio {
@@ -263,50 +264,50 @@
 
 	@keyframes shake {
 		0% {
-			transform: trangrayY(0);
+			transform: translateY(0);
 			background-color: #ff0;
 		}
 
 		10% {
-			transform: trangrayY(-10px);
+			transform: translateY(-10px);
 			background-color: #ff0;
 		}
 
 		20% {
-			transform: trangrayY(10px);
+			transform: translateY(10px);
 			background-color: #ff0;
 		}
 
 		30% {
-			transform: trangrayY(-10px);
+			transform: translateY(-10px);
 		}
 
 		40% {
-			transform: trangrayY(10px);
+			transform: translateY(10px);
 		}
 
 		50% {
-			transform: trangrayY(-10px);
+			transform: translateY(-10px);
 		}
 
 		60% {
-			transform: trangrayY(10px);
+			transform: translateY(10px);
 		}
 
 		70% {
-			transform: trangrayY(-10px);
+			transform: translateY(-10px);
 		}
 
 		80% {
-			transform: trangrayY(10px);
+			transform: translateY(10px);
 		}
 
 		90% {
-			transform: trangrayY(-10px);
+			transform: translateY(-10px);
 		}
 
 		to {
-			transform: trangrayY(0);
+			transform: translateY(0);
 		}
 	}
 

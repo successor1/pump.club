@@ -1,17 +1,23 @@
 <script setup>
-	import { onMounted, ref } from "vue";
-	import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+	import { computed } from "vue";
 
+	import { router, usePage } from "@inertiajs/vue3";
+	import { createAppKit, useAppKit, useDisconnect } from "@reown/appkit/vue";
+	import { useAccount, useAccountEffect, useSignMessage } from "@wagmi/vue";
+	import axios from "axios";
+	import { Power } from "lucide-vue-next";
+
+	import DangerButton from "@/Components/DangerButton.vue";
 	import PrimaryButton from "@/Components/PrimaryButton.vue";
+	import SecondaryButton from "@/Components/SecondaryButton.vue";
 	import {
 		networks,
 		projectId,
 		projectName,
 		projectUrl,
+		shortenAddress,
 		wagmiAdapter,
 	} from "@/lib/wagmi.js";
-	import { createAppKit } from "@reown/appkit/vue";
-	import axios from "axios";
 	createAppKit({
 		adapters: [wagmiAdapter],
 		networks,
@@ -20,84 +26,85 @@
 			name: projectName,
 			description: `${projectName} Crypto Memes Service`,
 			url: projectUrl,
+			icons: [],
 		},
 	});
-	const isAuthenticated = ref(false);
+	const authCheck = computed(() => !!usePage().props.auth.user);
 	const { address, isConnected } = useAccount();
-	const { openConnectModal } = useConnectModal();
-	const { disconnectAsync } = useDisconnect();
+	const { open: openConnectModal } = useAppKit();
+
+	const { disconnect } = useDisconnect();
 	const { signMessageAsync } = useSignMessage();
-
-	const checkAuthStatus = async () => {
-		try {
-			const response = await axios.get("/api/auth/status");
-			isAuthenticated.value = response.data.authenticated;
-		} catch (error) {
-			console.error("Failed to check auth status:", error);
-		}
-	};
-
-	const handleConnect = async () => {
-		if (!isConnected) {
-			openConnectModal();
-		}
-	};
 
 	const handleVerify = async () => {
 		try {
 			// Get auth code
-			const { data } = await axios.get("/auth/web3/code");
+			const { data } = await axios.post(window.route("auth.code"));
 			const authCode = data.authCode;
-
 			// Sign message
 			const signature = await signMessageAsync({
 				message: authCode,
 			});
 
 			// Verify signature and login
-			await axios.post("/auth/web3/verify", {
-				address: address.value,
-				signature,
-			});
-
-			isAuthenticated.value = true;
+			router.post(
+				window.route("login"),
+				{
+					address: address.value,
+					signature,
+				},
+				{
+					preserveState: true,
+					preserveScroll: true,
+				},
+			);
 		} catch (error) {
 			console.error("Verification failed:", error);
 		}
 	};
 
-	const handleLogout = async () => {
-		try {
-			await disconnectAsync();
-			await axios.post("/auth/web3/logout");
-			isAuthenticated.value = false;
-		} catch (error) {
-			console.error("Logout failed:", error);
-		}
+	const signOut = async () => {
+		if (authCheck.value) await axios.post(window.route("logout"));
 	};
 
-	onMounted(() => {
-		checkAuthStatus();
+	const signIn = async () => {
+		if (!authCheck.value) await handleVerify();
+	};
+	useAccountEffect({
+		onConnect(data) {
+			signIn();
+		},
+		onDisconnect() {
+			signOut();
+		},
 	});
 </script>
 
 <template>
 	<div class="flex gap-2">
-		<template v-if="!isConnected">
-			<PrimaryButton @click="handleConnect">Connect Wallet</PrimaryButton>
+		<template v-if="$page.props.auth.user && isConnected">
+			<SecondaryButton
+				size="xs"
+				@click="openConnectModal({ view: 'Account' })"
+				outlined>
+				{{ shortenAddress(address) }}
+			</SecondaryButton>
+			<DangerButton size="sm" icon-mode outlined @click="disconnect">
+				<Power class="w-4 h-4 stroke-[3]" />
+			</DangerButton>
 		</template>
-
-		<template v-else-if="!isAuthenticated">
-			<PrimaryButton @click="handleVerify">
+		<template v-else-if="isConnected">
+			<SecondaryButton size="xs" @click="handleVerify">
 				Verify Signature
-			</PrimaryButton>
-			<PrimaryButton outlined @click="disconnectAsync">
+			</SecondaryButton>
+			<DangerButton size="xs" @click="disconnect()">
 				Disconnect
-			</PrimaryButton>
+			</DangerButton>
 		</template>
-
 		<template v-else>
-			<PrimaryButton outlined @click="handleLogout">Logout</PrimaryButton>
+			<PrimaryButton size="xs" outlined @click="openConnectModal">
+				Connect Wallet
+			</PrimaryButton>
 		</template>
 	</div>
 </template>

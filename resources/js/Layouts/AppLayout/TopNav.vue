@@ -1,0 +1,161 @@
+<script setup>
+	import { ref } from "vue";
+
+	import { Link } from "@inertiajs/vue3";
+	import { BookOpenText } from "lucide-vue-next";
+	import { TelegramIcon, XIcon } from "vue3-simple-icons";
+
+	import PrimaryButton from "@/Components/PrimaryButton.vue";
+	import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
+	const isMobileMenuOpen = ref(false);
+</script>
+<template>
+	<nav class="bg-gray-800 border-b border-gray-700">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex items-center justify-between h-16">
+				<!-- Logo and Brand -->
+				<div class="flex-shrink-0 flex items-center lg:space-x-8">
+					<Link href="/" class="flex items-center">
+						<!-- You can replace this with your actual logo -->
+						<span class="text-yellow-400 text-xl font-bold">
+							MEMEX
+						</span>
+						<span class="ml-1 text-xs text-gray-400">beta</span>
+					</Link>
+					<!-- Navigation Links - Desktop -->
+					<div class="hidden lg:flex lg:items-center lg:space-x-4">
+						<Link
+							href="/my-tokens"
+							class="text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium"
+							:class="{
+								'text-white':
+									$page.url.startsWith('/my-tokens'),
+							}">
+							My Tokens
+						</Link>
+						<Link
+							href="/how-it-works"
+							class="text-gray-300 hover:text-primary px-3 py-2 text-sm font-medium"
+							:class="{
+								'text-white':
+									$page.url.startsWith('/how-it-works'),
+							}">
+							How it works
+						</Link>
+					</div>
+				</div>
+
+				<!-- Right Side Actions -->
+				<div class="hidden lg:flex lg:items-center lg:space-x-4">
+					<!-- Social Links -->
+					<div class="flex items-center space-x-3">
+						<PrimaryButton size="sm" outlined iconMode>
+							<XIcon class="w-4 h-4" />
+						</PrimaryButton>
+						<PrimaryButton size="sm" outlined iconMode>
+							<BookOpenText class="w-5 h-5" />
+						</PrimaryButton>
+						<PrimaryButton size="sm" outlined iconMode>
+							<TelegramIcon class="w-4 h-4" />
+						</PrimaryButton>
+					</div>
+
+					<!-- Action Buttons -->
+					<PrimaryButton size="xs" class="mr-2">
+						Launch Token
+					</PrimaryButton>
+					<Web3Auth />
+				</div>
+
+				<!-- Mobile menu button -->
+				<div class="flex lg:hidden">
+					<button
+						@click="isMobileMenuOpen = !isMobileMenuOpen"
+						class="inline-flex items-center justify-center p-2 rounded text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+						<span class="sr-only">Open main menu</span>
+						<!-- Icon when menu is closed -->
+						<svg
+							v-if="!isMobileMenuOpen"
+							class="block h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16" />
+						</svg>
+						<!-- Icon when menu is open -->
+						<svg
+							v-else
+							class="block h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Mobile menu -->
+		<div v-show="isMobileMenuOpen" class="lg:hidden">
+			<div class="px-2 pt-2 pb-3 space-y-1">
+				<Link
+					href="/my-tokens"
+					class="block px-3 py-2 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700"
+					:class="{
+						'bg-gray-900 text-primary':
+							$page.url.startsWith('/my-tokens'),
+					}">
+					My Tokens
+				</Link>
+				<Link
+					href="/how-it-works"
+					class="block px-3 py-2 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700"
+					:class="{
+						'bg-gray-900 text-primary':
+							$page.url.startsWith('/how-it-works'),
+					}">
+					How it works
+				</Link>
+			</div>
+			<!-- Mobile Social Links and Actions -->
+			<div class="pt-4 pb-3 border-t border-gray-700">
+				<div class="px-2 space-y-1">
+					<!-- Social Links -->
+					<div class="flex items-center space-x-2 px-3 py-2">
+						<PrimaryButton size="sm" outlined iconMode>
+							<XIcon class="w-4 h-4" />
+						</PrimaryButton>
+						<PrimaryButton size="sm" outlined iconMode>
+							<BookOpenText class="w-5 h-5" />
+						</PrimaryButton>
+						<PrimaryButton size="sm" outlined iconMode>
+							<TelegramIcon class="w-4 h-4" />
+						</PrimaryButton>
+					</div>
+					<!-- Action Buttons -->
+					<div class="space-y-2 px-3">
+						<PrimaryButton size="sm" class="w-full justify-center">
+							Launch Token
+						</PrimaryButton>
+						<PrimaryButton
+							size="sm"
+							outlined
+							class="w-full justify-center"
+							@click="$inertia.get(route('web3.auth'))">
+							Connect Wallet
+						</PrimaryButton>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+</template>

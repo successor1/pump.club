@@ -21,13 +21,16 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@heroicons/vue": "^2.2.0",
         "@reown/appkit": "^1.5.2",
         "@reown/appkit-adapter-wagmi": "^1.5.2",
         "@tanstack/vue-query": "^5.61.5",
         "@vee-validate/zod": "^4.14.7",
+        "@vue/eslint-config-standard": "^8.0.1",
         "@vueuse/core": "^12.0.0",
         "@wagmi/vue": "^0.0.65",
-        "@vue/eslint-config-standard": "^8.0.1",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
         "eslint": "^8.43.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-config-standard": "^17.1.0",
@@ -36,14 +39,14 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-promise": "^6.1.1",
         "eslint-plugin-vue": "^9.15.1",
-        "class-variance-authority": "^0.7.1",
-        "clsx": "^2.1.1",
         "lucide-vue-next": "^0.462.0",
+        "mini-svg-data-uri": "^1.4.4",
         "radix-vue": "^1.9.10",
         "tailwind-merge": "^2.5.5",
         "tailwindcss-animate": "^1.0.7",
         "vee-validate": "^4.14.7",
         "viem": "^2.21.51",
+        "vue3-simple-icons": "^13.2.0",
         "zod": "^3.23.8"
     }
 }

@@ -1,6 +1,8 @@
 import forms from '@tailwindcss/forms';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
+const svgToDataUri = require("mini-svg-data-uri");
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
@@ -32,7 +34,7 @@ export default {
                 xxl: `${1320 / 16}rem`,
             },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Rubik', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 primary: {

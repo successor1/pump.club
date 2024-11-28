@@ -34,6 +34,14 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => value(function () use ($request) {
+                return array_filter([
+                    'info' => $request->session()->get('message') ?? $request->session()->get('info'),
+                    'error' => $request->session()->get('error'),
+                    'success' => $request->session()->get('success'),
+                ]);
+            }),
+            'links' => config('app.links')
         ];
     }
 }

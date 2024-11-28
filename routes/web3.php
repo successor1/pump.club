@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::post('login', [Web3AuthController::class, 'create'])
         ->name('login');
-    Route::post('code', [Web3AuthController::class, 'authCode'])->name('auth_code');
+    Route::post('code', [Web3AuthController::class, 'authCode'])->name('auth.code');
 });
 
 Route::middleware('auth')->group(function () {

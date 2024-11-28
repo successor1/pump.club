@@ -19,8 +19,9 @@ class Web3AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create_function(Request $request): RedirectResponse
+    public function create(Request $request): RedirectResponse
     {
+
         try {
             // Validate request
             $validated = $request->validate([
@@ -36,6 +37,7 @@ class Web3AuthController extends Controller
                 $validated['signature'],
                 $validated['address']
             );
+
             if (!$isValid) return back()->with('error', __('Invalid signature'));
             // Clear the code from session
             session()->forget('web3_auth_code');

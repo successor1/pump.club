@@ -123,4 +123,13 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'links' => [
+        'twitter' => env('TWITTER'),
+        'youtube' => env('YOUTUBE'),
+        'tgGroup' => env('TELEGRAM_GROUP'),
+        'tgChannel' => env('TELEGRAM_CHANNEL'),
+        'discord' => env('DISCORD'),
+        'docs' => env('DOCUMENTATION'),
+    ]
+
 ];

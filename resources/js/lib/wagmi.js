@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { arbitrum, bsc, sepolia } from '@reown/appkit/networks';
 import { fallback, http, webSocket } from '@wagmi/vue';
