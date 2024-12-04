@@ -1,15 +1,23 @@
+/* eslint-disable import/order */
 import '../css/app.css';
 import './bootstrap';
 
-import { wagmiAdapter } from '@/lib/wagmi.js';
+import { createApp, h } from 'vue';
+
+import { useWagmiAdapter } from '@/lib/wagmi.js';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query';
 import { WagmiPlugin } from '@wagmi/vue';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createApp, h } from 'vue';
+import "tippy.js/dist/tippy.css";
+import "tippy.js/themes/light.css";
+import { createI18n } from "vue-i18n";
+import VueTippy from "vue-tippy";
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import messages from "./vue-i18n-locales.generated.js";
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
@@ -18,11 +26,20 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
+        const i18n = createI18n({
+            locale: props.initialPage.props.locale,
+            fallbackLocale: "en", // set fallback locale
+            messages, // set locale messages,
+            legacy: false,
+        });
+        const adapter = useWagmiAdapter(props.initialPage.props);
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use(WagmiPlugin, { config: wagmiAdapter.wagmiConfig })
+            .use(WagmiPlugin, { config: adapter.wagmiConfig })
             .use(VueQueryPlugin, { queryClient })
+            .use(i18n)
+            .use(VueTippy)
             .mount(el);
     },
     progress: {

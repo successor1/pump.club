@@ -8,6 +8,7 @@
 			type: String,
 			default: "",
 		},
+		compact: Boolean,
 	});
 
 	// We'll add state management and other functionality as needed
@@ -18,10 +19,13 @@
 		<FlashMessages />
 		<!-- Top Navigation (Will be created next) -->
 		<TopNav class="sticky top-0 z-50" />
+		<slot name="header" />
 		<!-- Main Content -->
-		<main class="min-h-[calc(100vh-4rem)] mt-[45px]">
+		<main
+			:class="{ 'mt-[45px]': !compact }"
+			class="min-h-[calc(100vh-4rem)]">
 			<!-- Main Content Area -->
-			<div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+			<div class="max-w-7xl mx-auto">
 				<slot></slot>
 			</div>
 		</main>

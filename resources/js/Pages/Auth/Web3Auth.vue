@@ -18,6 +18,7 @@
 		shortenAddress,
 		wagmiAdapter,
 	} from "@/lib/wagmi.js";
+	console.log(projectId);
 	createAppKit({
 		adapters: [wagmiAdapter],
 		networks,
@@ -27,6 +28,10 @@
 			description: `${projectName} Crypto Memes Service`,
 			url: projectUrl,
 			icons: [],
+		},
+		themeVariables: {
+			"--w3m-color-mix": "#404040",
+			"--w3m-color-mix-strength": 40,
 		},
 	});
 	const authCheck = computed(() => !!usePage().props.auth.user);
@@ -64,7 +69,7 @@
 	};
 
 	const signOut = async () => {
-		if (authCheck.value) await axios.post(window.route("logout"));
+		if (authCheck.value) router.post(window.route("logout"));
 	};
 
 	const signIn = async () => {

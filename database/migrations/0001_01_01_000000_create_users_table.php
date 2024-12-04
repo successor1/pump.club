@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('address')->unique();
             $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('profile_photo_path')->nullable();
+            $table->string('otp')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
+            $table->boolean('active')->default(true);
+            $table->boolean('banned')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

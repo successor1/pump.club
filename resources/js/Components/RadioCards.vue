@@ -60,7 +60,7 @@
 						<div class="flex flex-col">
 							<RadioGroupLabel
 								as="span"
-								class="block text-sm font-medium text-gray-900 dark:text-gray-200">
+								class="block text-sm font-medium text-gray-900 dark:text-gray-200 dark:text-gray-200">
 								{{ option.title }}
 							</RadioGroupLabel>
 							<RadioGroupDescription

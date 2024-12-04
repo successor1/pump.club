@@ -21,6 +21,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.2.0",
         "@reown/appkit": "^1.5.2",
         "@reown/appkit-adapter-wagmi": "^1.5.2",
@@ -39,13 +40,23 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-promise": "^6.1.1",
         "eslint-plugin-vue": "^9.15.1",
+        "filepond-plugin-file-validate-type": "^1.2.9",
+        "filepond-plugin-image-preview": "^4.6.12",
+        "lightweight-charts": "^4.2.1",
         "lucide-vue-next": "^0.462.0",
+        "luxon": "^3.5.0",
         "mini-svg-data-uri": "^1.4.4",
+        "oh-vue-icons": "^1.0.0-rc3",
         "radix-vue": "^1.9.10",
         "tailwind-merge": "^2.5.5",
+        "tailwind-scrollbar": "^3.1.0",
         "tailwindcss-animate": "^1.0.7",
         "vee-validate": "^4.14.7",
         "viem": "^2.21.51",
+        "vue-filepond": "^7.0.4",
+        "vue-i18n": "^10.0.5",
+        "vue-tippy": "^6.0.0-alpha.65",
+        "vue3-emoji-picker": "^1.1.8",
         "vue3-simple-icons": "^13.2.0",
         "zod": "^3.23.8"
     }

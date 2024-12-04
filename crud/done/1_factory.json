@@ -39,6 +39,11 @@
             "name": "abi",
             "type": "json|nullable",
             "rules": "required|string"
+        },
+        {
+            "name": "active",
+            "type": "boolean|default:true",
+            "rules": "nullable|boolean"
         }
     ],
     "relationships": [

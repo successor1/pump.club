@@ -42,23 +42,23 @@
         },
         {
             "name": "twitter",
-            "type": "string",
-            "rules": "string|required"
+            "type": "string|nullable",
+            "rules": "string|nullable"
         },
         {
             "name": "discord",
-            "type": "string",
-            "rules": "string|required"
+            "type": "string|nullable",
+            "rules": "string|nullable"
         },
         {
             "name": "telegram",
-            "type": "string",
-            "rules": "string|required"
+            "type": "string|nullable",
+            "rules": "string|nullable"
         },
         {
             "name": "website",
-            "type": "string",
-            "rules": "string|required"
+            "type": "string|nullable",
+            "rules": "string|nullable"
         },
         {
             "name": "status",
@@ -83,6 +83,11 @@
         {
             "name": "kingofthehill",
             "type": "boolean|default:false",
+            "rules": "nullable|boolean"
+        },
+        {
+            "name": "active",
+            "type": "boolean|default:true",
             "rules": "nullable|boolean"
         }
     ],

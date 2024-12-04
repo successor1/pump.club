@@ -7,7 +7,12 @@
         },
         {
             "name": "txid",
-            "type": "uuid|unique|max:255"
+            "type": "string|unique|max:255"
+        },
+        {
+            "name": "address",
+            "type": "string|max:44",
+            "rules": "required|string"
         },
         {
             "name": "qty",

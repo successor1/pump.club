@@ -5,7 +5,9 @@
 	import { BookOpenText } from "lucide-vue-next";
 	import { TelegramIcon, XIcon } from "vue3-simple-icons";
 
+	import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 	import PrimaryButton from "@/Components/PrimaryButton.vue";
+	import AuthLink from "@/Pages/Auth/AuthLink.vue";
 	import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 	const isMobileMenuOpen = ref(false);
 </script>
@@ -15,12 +17,9 @@
 			<div class="flex items-center justify-between h-16">
 				<!-- Logo and Brand -->
 				<div class="flex-shrink-0 flex items-center lg:space-x-8">
-					<Link href="/" class="flex items-center">
-						<!-- You can replace this with your actual logo -->
-						<span class="text-yellow-400 text-xl font-bold">
-							MEMEX
-						</span>
-						<span class="ml-1 text-xs text-gray-400">beta</span>
+					<Link class="flex items-center" href="/">
+						<ApplicationLogo
+							class="block h-5 w-auto font-semibold" />
 					</Link>
 					<!-- Navigation Links - Desktop -->
 					<div class="hidden lg:flex lg:items-center lg:space-x-4">
@@ -65,6 +64,7 @@
 						Launch Token
 					</PrimaryButton>
 					<Web3Auth />
+					<AuthLink />
 				</div>
 
 				<!-- Mobile menu button -->

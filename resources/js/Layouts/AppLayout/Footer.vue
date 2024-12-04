@@ -3,6 +3,7 @@
 	import { BookOpenCheckIcon, LucideSend } from "lucide-vue-next";
 	import { DiscordIcon, XIcon, YouTubeIcon } from "vue3-simple-icons";
 
+	import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 	import PrimaryButton from "@/Components/PrimaryButton.vue";
 </script>
 <template>
@@ -12,14 +13,13 @@
 				<div class="grid grid-cols-1 md:grid-cols-6 gap-8">
 					<!-- Brand Column -->
 					<div class="space-y-4 md:col-span-2">
-						<Link href="/" class="flex items-center">
-							<span class="text-yellow-400 text-xl font-bold">
-								MEMEX
-							</span>
-							<span class="ml-1 text-xs text-gray-400">beta</span>
+						<Link class="flex items-center" href="/">
+							<ApplicationLogo
+								class="block h-8 w-auto font-semibold" />
 						</Link>
+
 						<p class="text-sm font-semibold">
-							Fair memes for fair fun.
+							Great memes for great fun.
 						</p>
 					</div>
 					<!-- Explore Column -->
@@ -79,9 +79,9 @@
 									How it works
 								</Link>
 							</li>
-							<li v-if="$page.props.links.docs">
+							<li v-if="$page.props.links.documentation">
 								<a
-									:href="$page.props.links.docs"
+									:href="$page.props.links.documentation"
 									class="inline-flex items-center space-x-2 text-sm font-semibold hover:text-primary transition-colors">
 									<BookOpenCheckIcon class="w-5 h-5" />
 									<span>Docs</span>

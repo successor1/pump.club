@@ -3,18 +3,14 @@
 
 	import { Head, Link } from "@inertiajs/vue3";
 	import {
-		BiGit,
-		BiUiRadiosGrid,
-		GiPowerButton,
-		HiChevronDown,
-		HiLogout,
-		HiUsers,
-		HiViewGrid,
-		IoQrCode,
-		MdAccountcircleOutlined,
-		RiBankCard2Line,
-		RiGift2Line,
-	} from "oh-vue-icons/icons";
+		BaggageClaim,
+		ChevronDown,
+		LayoutPanelLeft,
+		MessageSquareCode,
+		Pickaxe,
+		Users,
+		Zap,
+	} from "lucide-vue-next";
 
 	import ApplicationMark from "@/Components/ApplicationLogo.vue";
 	import Banner from "@/Components/Banner.vue";
@@ -22,7 +18,7 @@
 	import DropdownLink from "@/Components/DropdownLink.vue";
 	import NavLink from "@/Components/NavLink.vue";
 	import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-	import VueIcon from "@/Components/VueIcon.vue";
+	import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 
 	defineProps({
 		title: String,
@@ -31,66 +27,49 @@
 	const showingNavigationDropdown = ref(false);
 
 	const isCurrent = (routes) => routes.find((r) => window.route().current(r));
-	const logout = () => {
-		console.log('router.delete(window.route("logout"));');
-	};
 
 	const menus = [
 		{
 			name: "Dashboard",
-			icon: HiViewGrid,
+			icon: LayoutPanelLeft,
 			route: "admin.dashboard",
 			active: "admin.dashboard",
 		},
 		{
-			name: "Products",
-			icon: BiUiRadiosGrid,
-			route: "admin.products.index",
-			active: ["admin.products.*", "admin.releases.*", "admin.packs.*"],
-			submenu: [
-				{
-					name: "Products",
-					icon: BiUiRadiosGrid,
-					route: "admin.products.index",
-					active: "admin.products.*",
-				},
-				{
-					name: "Packages",
-					icon: RiGift2Line,
-					route: "admin.packs.index",
-					active: "admin.packs.*",
-				},
-				{
-					name: "Releases",
-					icon: BiGit,
-					route: "admin.releases.index",
-					active: "admin.releases.*",
-				},
-			],
+			name: "Factories",
+			icon: Pickaxe,
+			route: "admin.factories.index",
+			active: "admin.factories.*",
+		},
+		{
+			name: "Launchpads",
+			icon: Zap,
+			route: "admin.launchpads.index",
+			active: "admin.launchpads.*",
 		},
 		{
 			name: "Users",
-			icon: MdAccountcircleOutlined,
+			icon: Users,
 			route: "admin.users.index",
-			active: ["admin.users.*", "admin.orders.*", "admin.licenses.*"],
+			active: ["admin.users.*", "admin.trades.*", "admin.msgs.*"],
 			submenu: [
 				{
 					name: "Users",
-					icon: HiUsers,
+					icon: Users,
 					route: "admin.users.index",
 					active: "admin.users.*",
 				},
 				{
-					name: "Orders",
-					icon: RiBankCard2Line,
-					route: "admin.orders.index",
-					active: "admin.orders.*",
+					name: "Trades",
+					icon: BaggageClaim,
+					route: "admin.trades.index",
+					active: "admin.trades.*",
 				},
 				{
-					name: "Licenses",
-					icon: IoQrCode,
-					route: "admin.licenses.index",
-					active: "admin.licenses.*",
+					name: "Messages",
+					icon: MessageSquareCode,
+					route: "admin.msgs.index",
+					active: "admin.msgs.*",
 				},
 			],
 		},
@@ -98,40 +77,34 @@
 
 	const links = [
 		{
-			name: "Products",
-			icon: BiUiRadiosGrid,
-			route: "admin.products.index",
+			name: "Factories",
+			icon: Pickaxe,
+			route: "admin.factories.index",
 			active: "admin.products.*",
 		},
 		{
-			name: "Packages",
-			icon: RiGift2Line,
-			route: "admin.packs.index",
-			active: "admin.packs.*",
-		},
-		{
-			name: "Releases",
-			icon: BiGit,
-			route: "admin.releases.index",
-			active: "admin.releases.*",
+			name: "Launchpads",
+			icon: Zap,
+			route: "admin.launchpads.index",
+			active: "admin.launchpads.*",
 		},
 		{
 			name: "Users",
-			icon: HiUsers,
+			icon: Users,
 			route: "admin.users.index",
 			active: "admin.users.*",
 		},
 		{
-			name: "Orders",
-			icon: RiBankCard2Line,
-			route: "admin.orders.index",
-			active: "admin.orders.*",
+			name: "Trades",
+			icon: BaggageClaim,
+			route: "admin.trades.index",
+			active: "admin.trades.*",
 		},
 		{
-			name: "Licenses",
-			icon: IoQrCode,
-			route: "admin.licenses.index",
-			active: "admin.licenses.*",
+			name: "Messages",
+			icon: MessageSquareCode,
+			route: "admin.msgs.index",
+			active: "admin.msgs.*",
 		},
 	];
 </script>
@@ -142,7 +115,7 @@
 
 		<Banner />
 
-		<div class="min-h-screen dark">
+		<div class="min-h-screen bg-white dark:bg-gray-850">
 			<nav class="">
 				<!-- Primary Navigation Menu -->
 				<div class="container-fluid mx-auto px-4 sm:px-6 lg:px-8">
@@ -154,7 +127,7 @@
 									class="flex items-center"
 									:href="route('admin.dashboard')">
 									<ApplicationMark
-										class="block h-9 w-auto font-semibold" />
+										class="block h-5 w-auto font-semibold" />
 								</Link>
 							</div>
 
@@ -181,8 +154,8 @@
 																: 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
 														"
 														class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md bg-white dark:bg-gray-800 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-														<VueIcon
-															:icon="menu.icon"
+														<component
+															:is="menu.icon"
 															class="h-5 w-5 mr-2 -ml-1"
 															:class="{
 																'text-primary':
@@ -192,11 +165,8 @@
 															}" />
 
 														{{ menu.name }}
-														<VueIcon
-															class="ms-2 -me-0.5 h-4 w-4"
-															:icon="
-																HiChevronDown
-															" />
+														<ChevronDown
+															class="ms-2 -me-0.5 h-4 w-4" />
 													</button>
 												</span>
 											</template>
@@ -219,8 +189,8 @@
 														)
 													"
 													as="a">
-													<VueIcon
-														:icon="sub.icon"
+													<component
+														:is="sub.icon"
 														class="h-5 w-5 mr-2 -ml-1" />
 													{{ sub.name }}
 												</DropdownLink>
@@ -231,8 +201,8 @@
 										v-else
 										:href="route(menu.route)"
 										:active="route().current(menu.active)">
-										<VueIcon
-											:icon="menu.icon"
+										<component
+											:is="menu.icon"
 											class="h-5 w-5 mr-2 -ml-1"
 											:class="{
 												'text-primary': route().current(
@@ -246,16 +216,22 @@
 							</div>
 						</div>
 
-						<div class="hidden sm:flex sm:items-center sm:ms-6">
+						<div class="flex items-center ms-6 gap-3">
 							<!-- Settings Dropdown -->
 
-							<div class="ms-3 relative">
+							<div class="sm:ms-3 hidden sm:flex relative">
 								<Dropdown align="right" width="48">
 									<template #trigger>
 										<span class="inline-flex rounded-md">
 											<button
 												type="button"
 												class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+												<img
+													class="w-5 h-5 mr-2 rounded-full"
+													:src="
+														$page.props.auth.user
+															.profile_photo_url
+													" />
 												{{ $page.props.auth.user.name }}
 
 												<svg
@@ -286,9 +262,9 @@
 											:key="link.name"
 											:href="route(link.route)"
 											as="a">
-											<VueIcon
-												:icon="link.icon"
-												class="h-5 w-5 mr-2 -ml-1"
+											<component
+												:is="link.icon"
+												class="h-5 w-5 mr-2 -ml-1 inline-flex"
 												:class="{
 													'text-primary':
 														route().current(
@@ -298,61 +274,46 @@
 												aria-hidden="true" />
 											{{ link.name }}
 										</DropdownLink>
-
-										<div
-											class="border-t border-gray-200 dark:border-gray-700" />
-
-										<!-- Authentication -->
-										<DropdownLink
-											:href="route('logout')"
-											method="post"
-											as="button">
-											<VueIcon
-												:icon="GiPowerButton"
-												class="h-5 w-5 mr-2 -ml-1"
-												aria-hidden="true" />
-											Log Out
-										</DropdownLink>
 									</template>
 								</Dropdown>
 							</div>
-						</div>
-
-						<!-- Hamburger -->
-						<div class="-me-2 flex items-center sm:hidden">
-							<button
-								class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
-								@click="
-									showingNavigationDropdown =
-										!showingNavigationDropdown
-								">
-								<svg
-									class="h-6 w-6"
-									stroke="currentColor"
-									fill="none"
-									viewBox="0 0 24 24">
-									<path
-										:class="{
-											hidden: showingNavigationDropdown,
-											'inline-flex':
-												!showingNavigationDropdown,
-										}"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M4 6h16M4 12h16M4 18h16" />
-									<path
-										:class="{
-											hidden: !showingNavigationDropdown,
-											'inline-flex':
-												showingNavigationDropdown,
-										}"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M6 18L18 6M6 6l12 12" />
-								</svg>
-							</button>
+							<Web3Auth />
+							<!-- Hamburger -->
+							<div class="-me-2 flex items-center sm:hidden">
+								<button
+									class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out"
+									@click="
+										showingNavigationDropdown =
+											!showingNavigationDropdown
+									">
+									<svg
+										class="h-6 w-6"
+										stroke="currentColor"
+										fill="none"
+										viewBox="0 0 24 24">
+										<path
+											:class="{
+												hidden: showingNavigationDropdown,
+												'inline-flex':
+													!showingNavigationDropdown,
+											}"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M4 6h16M4 12h16M4 18h16" />
+										<path
+											:class="{
+												hidden: !showingNavigationDropdown,
+												'inline-flex':
+													showingNavigationDropdown,
+											}"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M6 18L18 6M6 6l12 12" />
+									</svg>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -370,10 +331,10 @@
 							:key="link.name"
 							:href="route(link.route)"
 							:active="route().current(link.active)"
-							class="flex flex-row items-start space-x-4"
+							class="flex flex-row items-start space-x-4 text-gray-300"
 							as="a">
-							<VueIcon
-								:icon="link.icon"
+							<component
+								:is="link.icon"
 								class="h-5 w-5 mr-2 -ml-1"
 								:class="{
 									'text-primary': route().current(
@@ -386,21 +347,6 @@
 					</div>
 
 					<!-- Responsive Settings Options -->
-					<div class="border-y border-gray-200 dark:border-gray-700">
-						<div>
-							<form method="POST" @submit.prevent="logout">
-								<ResponsiveNavLink
-									@click.prevent="logout()"
-									type="submit"
-									as="button">
-									<VueIcon
-										:icon="HiLogout"
-										class="h-5 w-5 mr-2" />
-									Log Out
-								</ResponsiveNavLink>
-							</form>
-						</div>
-					</div>
 				</div>
 			</nav>
 

@@ -2,7 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\User;
+use App\Models\Setting;
+use Auth;
+use Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -29,10 +35,11 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $setting = Setting::find(1);
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => Auth::check() ? new User($request->user()) : null,
             ],
             'flash' => value(function () use ($request) {
                 return array_filter([
@@ -41,7 +48,40 @@ class HandleInertiaRequests extends Middleware
                     'success' => $request->session()->get('success'),
                 ]);
             }),
-            'links' => config('app.links')
+            'links' => [...Arr::only(
+                $setting->toArray(),
+                [
+                    'twitter',
+                    'youtube',
+                    'tgGroup',
+                    'tgChannel',
+                    'discord',
+                    'documentation',
+                ]
+            ), ...config('app.links', [])],
+            'appName' => $setting->name ?? config('app.name'),
+            'appLogo' => $setting->logo,
+            'uploadsDisk' => fn() => config('filesystems.default'),
+            's3' => fn() => config('filesystems.default') != 'public',
+            'profilePhotoDisk' => fn() => config('filesystems.profile_photo_disk'),
+            'chainIds' => fn() => Cache::remember('chainids', 60, function () {
+                $foundry = json_decode(File::get(base_path('evm/Foundry.json')), true);
+                return array_keys($foundry['addresses']);
+            }),
+            ...Arr::only(
+                $setting->toArray(),
+                [
+                    'rpc',
+                    'ankr',
+                    'infura',
+                    'blast',
+                    'chat',
+                    'featured',
+                ]
+            ),
+            ...(config('evm.ankr_key', null) ? ['ankr' => config('evm.ankr_key')] : []),
+            ...(config('evm.blastapi_key', null) ? ['blast' => config('evm.blastapi_key')] : []),
+            ...(config('evm.infura_key', null) ? ['infura' => config('evm.infura_key')] : []),
         ];
     }
 }

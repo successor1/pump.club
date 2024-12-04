@@ -1,10 +1,10 @@
-import forms from '@tailwindcss/forms';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 const svgToDataUri = require("mini-svg-data-uri");
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -94,5 +94,5 @@ export default {
 
     },
 
-    plugins: [forms, require('tailwindcss-animate')],
+    plugins: [require('tailwindcss-animate'), require("tailwind-scrollbar"),],
 };

@@ -25,7 +25,7 @@
 		},
 		size: {
 			type: String,
-			default: "md",
+			default: "sm",
 			validator: (value) =>
 				["xs", "sm", "md", "lg", "xl"].includes(value),
 		},

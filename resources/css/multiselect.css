@@ -15,7 +15,7 @@
 	@apply rounded-t-none;
 }
 .multiselect.is-active {
-	@apply ring ring-emerald-500 ring-opacity-30;
+	@apply ring ring-amber-500 ring-opacity-30;
 }
 .multiselect.is-active.error {
 	@apply ring-red-500;
@@ -54,7 +54,7 @@
 }
 
 .multiselect-tag {
-	@apply border border-emerald-600/30 dark:border-emerald-400/30  hover:bg-emerald-500/20 focus:bg-emerald-500/20 active:bg-emerald-500/25 bg-emerald-500/20 text-emerald-500 text-sm font-semibold py-1 pl-2 rounded-md mr-1 mb-1 flex items-center space-x-1 whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1;
+	@apply border border-amber-600/30 dark:border-amber-400/30  hover:bg-amber-500/20 focus:bg-amber-500/20 active:bg-amber-500/25 bg-amber-500/20 text-amber-500 text-sm font-semibold py-1 pl-2 rounded-md mr-1 mb-1 flex items-center space-x-1 whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1;
 }
 .multiselect-tag.is-disabled {
 	@apply pr-2 opacity-80 rtl:pl-2;
@@ -150,16 +150,16 @@
 	@apply bg-gray-300 text-gray-700;
 }
 .multiselect-group-label.is-selected {
-	@apply bg-emerald-600 text-white;
+	@apply bg-amber-600 text-white;
 }
 .multiselect-group-label.is-disabled {
 	@apply bg-gray-100 text-gray-300 cursor-not-allowed;
 }
 .multiselect-group-label.is-selected.is-pointed {
-	@apply bg-emerald-600 text-white opacity-90;
+	@apply bg-amber-600 text-white opacity-90;
 }
 .multiselect-group-label.is-selected.is-disabled {
-	@apply text-emerald-100 bg-emerald-600 bg-opacity-60 cursor-not-allowed;
+	@apply text-amber-100 bg-amber-600 bg-opacity-60 cursor-not-allowed;
 }
 
 .multiselect-group-options {
@@ -173,16 +173,16 @@
 	@apply text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800;
 }
 .multiselect-option.is-selected {
-	@apply text-white bg-emerald-500;
+	@apply text-white bg-amber-500;
 }
 .multiselect-option.is-disabled {
 	@apply text-gray-300 dark:text-gray-500 cursor-not-allowed;
 }
 .multiselect-option.is-selected.is-pointed {
-	@apply text-white  bg-emerald-500 opacity-90;
+	@apply text-white  bg-amber-500 opacity-90;
 }
 .multiselect-option.is-selected.is-disabled {
-	@apply text-emerald-100 bg-emerald-500 bg-opacity-50 cursor-not-allowed;
+	@apply text-amber-100 bg-amber-500 bg-opacity-50 cursor-not-allowed;
 }
 
 .multiselect-no-options {

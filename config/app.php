@@ -129,7 +129,8 @@ return [
         'tgGroup' => env('TELEGRAM_GROUP'),
         'tgChannel' => env('TELEGRAM_CHANNEL'),
         'discord' => env('DISCORD'),
-        'docs' => env('DOCUMENTATION'),
-    ]
+        'documentation' => env('DOCUMENTATION'),
+    ],
+    'admin' => env('ADMIN', ''),
 
 ];
