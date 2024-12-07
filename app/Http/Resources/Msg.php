@@ -26,7 +26,7 @@ class Msg extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at,
             'launchpad' => new Launchpad($this->whenLoaded('launchpad')),
-            'user' => new User($this->whenLoaded('user')),
+            'user' => new ViewUser($this->whenLoaded('user')),
             'can' => [
                 'delete' => $request->user()?->id === $this->user_id ||
                     $request->user()?->isAdmin(),

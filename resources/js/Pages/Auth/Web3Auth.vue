@@ -2,8 +2,13 @@
 	import { computed } from "vue";
 
 	import { router, usePage } from "@inertiajs/vue3";
-	import { createAppKit, useAppKit, useDisconnect } from "@reown/appkit/vue";
-	import { useAccount, useAccountEffect, useSignMessage } from "@wagmi/vue";
+	import { createAppKit, useAppKit } from "@reown/appkit/vue";
+	import {
+		useAccount,
+		useAccountEffect,
+		useDisconnect,
+		useSignMessage,
+	} from "@wagmi/vue";
 	import axios from "axios";
 	import { Power } from "lucide-vue-next";
 
@@ -18,7 +23,7 @@
 		shortenAddress,
 		wagmiAdapter,
 	} from "@/lib/wagmi.js";
-	console.log(projectId);
+
 	createAppKit({
 		adapters: [wagmiAdapter],
 		networks,
@@ -33,6 +38,9 @@
 			"--w3m-color-mix": "#404040",
 			"--w3m-color-mix-strength": 40,
 		},
+	});
+	defineProps({
+		size: { type: String, default: "xs" },
 	});
 	const authCheck = computed(() => !!usePage().props.auth.user);
 	const { address, isConnected } = useAccount();
@@ -89,7 +97,7 @@
 	<div class="flex gap-2">
 		<template v-if="$page.props.auth.user && isConnected">
 			<SecondaryButton
-				size="xs"
+				:size="size"
 				@click="openConnectModal({ view: 'Account' })"
 				outlined>
 				{{ shortenAddress(address) }}
@@ -99,15 +107,15 @@
 			</DangerButton>
 		</template>
 		<template v-else-if="isConnected">
-			<SecondaryButton size="xs" @click="handleVerify">
+			<SecondaryButton :size="size" @click="handleVerify">
 				Verify Signature
 			</SecondaryButton>
-			<DangerButton size="xs" @click="disconnect()">
+			<DangerButton :size="size" @click="disconnect()">
 				Disconnect
 			</DangerButton>
 		</template>
 		<template v-else>
-			<PrimaryButton size="xs" outlined @click="openConnectModal">
+			<PrimaryButton :size="size" outlined @click="openConnectModal">
 				Connect Wallet
 			</PrimaryButton>
 		</template>

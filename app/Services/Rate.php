@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Http;
 class Rate
 {
 
-    
+    /**
+     * call the coincap api
+     */
 
     public static function api($path)
     {
@@ -23,6 +25,9 @@ class Rate
         return $response->json('data', []);
     }
 
+    /**
+     * cache the coincap symbols for easy retriviels
+     */
     public static function  symbols()
     {
         return Cache::remember('--rates--symbols--', 60 * 60, function () {
@@ -37,6 +42,9 @@ class Rate
         });
     }
 
+    /**
+     * update the rates table for the chain currencies
+     */
     public static function update()
     {
         $siteCurrency = 'USD';

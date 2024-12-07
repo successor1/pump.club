@@ -39,7 +39,9 @@ class FactoriesController extends Controller
         $foundry = json_decode(File::get(base_path('evm/Foundry.json')));
         return Inertia::render('Admin/Factories/Create', [
             'foundry' => $foundry,
-            'config' => collect(config('evm'))->keyBy('chainId')
+            'config' => collect(config('evm'))->reject(function ($evm) {
+                return !is_array($evm) || !isset($evm['chainId']) || !isset($evm['symbol']);
+            })->keyBy('chainId')
         ]);
     }
 

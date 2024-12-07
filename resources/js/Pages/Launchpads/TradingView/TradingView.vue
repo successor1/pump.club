@@ -1,206 +1,256 @@
+<!-- eslint-disable new-cap -->
+
 <script setup>
-	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-
-	import { createChart } from "lightweight-charts";
-
-	import PrimaryButton from "@/Components/BaseButton.vue";
+	import { onMounted, onUnmounted } from "vue";
 
 	const props = defineProps({
-		launchpadId: {
-			type: [Number, String],
-			required: true,
-		},
-		symbol: {
-			type: String,
+		launchpad: {
+			type: Object,
 			required: true,
 		},
 	});
 
-	// State
-	const chartContainer = ref(null);
-	const chart = ref(null);
-	const candleSeries = ref(null);
-	const volumeSeries = ref(null);
-	const loading = ref(true);
-	const currentPrice = ref(0);
-	const selectedInterval = ref("1h");
-	const intervals = ["1m", "5m", "15m", "1h", "4h", "1d"];
+	let widget = null;
 
-	// Computed
-	const priceChange = computed(() => {
-		// Calculate 24h price change percentage
-		return "0.00"; // Implement actual calculation
-	});
+	const configureWidget = () => {
+		return new window.TradingView.widget({
+			symbol: props.launchpad.symbol,
+			interval: "60",
+			container: "tv_chart_container",
+			library_path: "/charting_library/",
+			locale: "en",
+			disabled_features: [
+				"use_localstorage_for_settings",
+				"header_widget",
+				"timeframes_toolbar",
+				"left_toolbar",
+				"header_widget_dom_node",
+				"symbol_info",
+				"symbol_search_hot_key",
+			],
+			enabled_features: ["study_templates"],
+			charts_storage_url: "https://saveload.tradingview.com",
+			charts_storage_api_version: "1.1",
+			client_id: "tradingview.com",
+			user_id: "public_user",
+			fullscreen: false,
+			autosize: true,
+			theme: "Dark",
+			overrides: {
+				// Main background - matching your bg-gray-800 (#262626)
+				"paneProperties.backgroundType": "solid",
+				"paneProperties.background": "#262626",
+				// "paneProperties.backgroundGradientStartColor": "#262626",
+				// "paneProperties.backgroundGradientEndColor": "#262626",
 
-	const priceChangeColor = computed(() => {
-		const change = parseFloat(priceChange.value);
-		return change >= 0 ? "text-green-500" : "text-red-500";
-	});
+				// Grid lines - using gray-750 (#333333) for subtle contrast
+				"paneProperties.vertGridProperties.color": "#333333",
+				"paneProperties.horzGridProperties.color": "#333333",
 
-	// Methods
-	const formatPrice = (price) => {
-		return new Intl.NumberFormat("en-US", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 8,
-		}).format(price);
+				// Candlestick colors - keeping these distinct for clarity
+				"mainSeriesProperties.candleStyle.upColor": "#22c55e",
+				"mainSeriesProperties.candleStyle.downColor": "#ef4444",
+				"mainSeriesProperties.candleStyle.borderUpColor": "#22c55e",
+				"mainSeriesProperties.candleStyle.borderDownColor": "#ef4444",
+				"mainSeriesProperties.candleStyle.wickUpColor": "#22c55e",
+				"mainSeriesProperties.candleStyle.wickDownColor": "#ef4444",
+
+				// Scales - using various gray shades
+				"scalesProperties.backgroundColor": "#262626", // gray-800
+				"scalesProperties.lineColor": "#333333", // gray-750
+				"scalesProperties.textColor": "#8b8b8b", // gray-450
+
+				// Crosshair - using gray-550
+				"crossHairProperties.color": "#636363",
+				"crossHairProperties.style": 0,
+
+				// Volume
+				volumePaneSize: "medium",
+				"volume.volume.color.0": "#ef4444",
+				"volume.volume.color.1": "#22c55e",
+
+				// Watermark - using gray-750 with high transparency
+				"symbolWatermarkProperties.color": "#333333",
+				"symbolWatermarkProperties.transparency": 85,
+
+				// Chart style
+				"mainSeriesProperties.style": 1,
+				"mainSeriesProperties.showPriceLine": true,
+
+				// Legend text colors
+				// "symbolWatermarkProperties.transparency": 85,
+				"scalesProperties.fontSize": 11,
+				// "scalesProperties.lineColor": "#333333",
+			},
+			studies_overrides: {
+				"volume.volume.color.0": "#ef4444",
+				"volume.volume.color.1": "#22c55e",
+			},
+			loading_screen: {
+				backgroundColor: "#262626", // gray-800
+				foregroundColor: "#636363", // gray-550
+			},
+			datafeed: {
+				onReady: (callback) => {
+					callback({
+						supported_resolutions: [
+							"1",
+							"5",
+							"15",
+							"30",
+							"60",
+							"240",
+							"D",
+							"W",
+						],
+						currency_codes: ["USD"],
+						supports_marks: false,
+						supports_time: true,
+						supports_timescale_marks: false,
+					});
+				},
+				searchSymbols: (userInput, exchange, symbolType, onResult) => {
+					onResult([
+						{
+							symbol: props.launchpad.symbol,
+							full_name: props.launchpad.symbol,
+							description: props.launchpad.symbol,
+							exchange: "DEX",
+							type: "crypto",
+						},
+					]);
+				},
+				resolveSymbol: (
+					symbolName,
+					onSymbolResolvedCallback,
+					onResolveErrorCallback,
+				) => {
+					onSymbolResolvedCallback({
+						name: props.launchpad.symbol,
+						full_name: props.launchpad.symbol,
+						description: props.launchpad.symbol,
+						type: "crypto",
+						session: "24x7",
+						timezone: "Etc/UTC",
+						ticker: props.launchpad.symbol,
+						minmov: 1,
+						pricescale: 100000000,
+						has_intraday: true,
+						intraday_multipliers: [
+							"1",
+							"5",
+							"15",
+							"30",
+							"60",
+							"240",
+						],
+						supported_resolutions: [
+							"1",
+							"5",
+							"15",
+							"30",
+							"60",
+							"240",
+							"D",
+							"W",
+						],
+						volume_precision: 8,
+						data_status: "streaming",
+					});
+				},
+				getBars: async (
+					symbolInfo,
+					resolution,
+					periodParams,
+					onHistoryCallback,
+					onErrorCallback,
+				) => {
+					try {
+						const response = await fetch(
+							`/api/launchpad/${props.launchpad.contract}/candles?timeframe=${resolution}&from=${periodParams.from}&to=${periodParams.to}`,
+						);
+
+						if (!response.ok) {
+							throw new Error("Network response was not ok");
+						}
+
+						const data = await response.json();
+
+						if (data.length === 0) {
+							onHistoryCallback([], { noData: true });
+							return;
+						}
+
+						const bars = data.map((bar) => ({
+							time: bar.timestamp * 1000,
+							open: parseFloat(bar.open),
+							high: parseFloat(bar.high),
+							low: parseFloat(bar.low),
+							close: parseFloat(bar.close),
+							volume: parseFloat(bar.volume),
+						}));
+
+						onHistoryCallback(bars, { noData: false });
+					} catch (err) {
+						console.error("Error fetching candles:", err);
+						onErrorCallback(err);
+					}
+				},
+				subscribeBars: (
+					symbolInfo,
+					resolution,
+					onRealtimeCallback,
+					subscribeUID,
+					onResetCacheNeededCallback,
+				) => {
+					window.Echo.channel(
+						`launchpad.${props.launchpad.id}`,
+					).listen("NewTradeEvent", (trade) => {
+						const bar = {
+							time: new Date(trade.created_at).getTime(),
+							open: parseFloat(trade.amount),
+							high: parseFloat(trade.amount),
+							low: parseFloat(trade.amount),
+							close: parseFloat(trade.amount),
+							volume: parseFloat(trade.qty),
+						};
+						onRealtimeCallback(bar);
+					});
+				},
+				unsubscribeBars: (subscriberUID) => {
+					window.Echo.leave(`launchpad.${props.launchpad.id}`);
+				},
+			},
+		});
 	};
 
-	const initChart = () => {
-		const options = {
-			layout: {
-				background: { color: "transparent" },
-				textColor: "#D1D5DB",
-			},
-			grid: {
-				vertLines: { color: "#525252" },
-				horzLines: { color: "#525252" },
-			},
-			crosshair: {
-				mode: 0,
-			},
-			rightPriceScale: {
-				borderColor: "#525252",
-			},
-			timeScale: {
-				borderColor: "#525252",
-				timeVisible: true,
-				secondsVisible: false,
-			},
-		};
+	onMounted(async () => {
+		const scriptPath = "/charting_library/charting_library.js";
 
-		chart.value = createChart(chartContainer.value, options);
+		if (!document.querySelector(`script[src="${scriptPath}"]`)) {
+			const script = document.createElement("script");
+			script.src = scriptPath;
+			script.type = "text/javascript";
+			document.head.appendChild(script);
 
-		// Create candlestick series
-		candleSeries.value = chart.value.addCandlestickSeries({
-			upColor: "#10B981",
-			downColor: "#EF4444",
-			borderVisible: false,
-			wickUpColor: "#10B981",
-			wickDownColor: "#EF4444",
-		});
-
-		// Add volume series
-		volumeSeries.value = chart.value.addHistogramSeries({
-			color: "#60A5FA",
-			priceFormat: {
-				type: "volume",
-			},
-			priceScaleId: "", // Set as an overlay
-		});
-
-		// Handle resize
-		const handleResize = () => {
-			chart.value.applyOptions({
-				width: chartContainer.value.clientWidth,
-				height: chartContainer.value.clientHeight,
-			});
-		};
-
-		window.addEventListener("resize", handleResize);
-
-		// Cleanup
-		onUnmounted(() => {
-			window.removeEventListener("resize", handleResize);
-			if (chart.value) {
-				chart.value.remove();
-			}
-		});
-	};
-
-	const loadChartData = async () => {
-		loading.value = true;
-		try {
-			const response = await fetch(
-				`/api/launchpad/${props.launchpadId}/candles/${selectedInterval.value}`,
-			);
-			const data = await response.json();
-
-			if (data.candles?.length) {
-				candleSeries.value.setData(data.candles);
-				volumeSeries.value.setData(data.volumes);
-				currentPrice.value =
-					data.candles[data.candles.length - 1].close;
-			}
-		} catch (error) {
-			console.error("Error loading chart data:", error);
-		} finally {
-			loading.value = false;
+			script.onload = () => {
+				widget = configureWidget();
+			};
+		} else {
+			widget = configureWidget();
 		}
-	};
-
-	const changeInterval = (interval) => {
-		selectedInterval.value = interval;
-		loadChartData();
-	};
-
-	// WebSocket handling
-	const handleNewTrade = (trade) => {
-		if (trade.launchpad_id !== props.launchpadId) return;
-
-		// Update current candle
-		const lastPrice = parseFloat(trade.amount) / parseFloat(trade.qty);
-		currentPrice.value = lastPrice;
-
-		// Update chart data
-		// This will be implemented based on your backend websocket implementation
-	};
-
-	// Lifecycle
-	onMounted(() => {
-		initChart();
-		loadChartData();
-		// Subscribe to trade updates
-		window.Echo.channel(`launchpad.${props.launchpadId}`).listen(
-			"NewTradeEvent",
-			handleNewTrade,
-		);
 	});
 
 	onUnmounted(() => {
-		window.Echo.leave(`launchpad.${props.launchpadId}`);
+		if (widget) {
+			widget.remove();
+			widget = null;
+		}
+		window.Echo.leave(`launchpad.${props.launchpad.id}`);
 	});
-
-	// Watch for interval changes
-	watch(selectedInterval, loadChartData);
 </script>
 <template>
-	<div class="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-		<div class="p-4 border-b dark:border-gray-700">
-			<div class="flex items-center justify-between">
-				<div class="flex items-center space-x-4">
-					<h2 class="text-xl text-primary font-bold">{{ symbol }}</h2>
-					<div class="text-sm">
-						<span :class="priceChangeColor">
-							{{ formatPrice(currentPrice) }}
-							({{ priceChange }}%)
-						</span>
-					</div>
-				</div>
-				<div class="flex items-center space-x-2">
-					<PrimaryButton
-						v-for="interval in intervals"
-						:key="interval"
-						:outlined="selectedInterval !== interval"
-						secondary
-						size="xss"
-						@click="changeInterval(interval)">
-						{{ interval }}
-					</PrimaryButton>
-				</div>
-			</div>
-		</div>
-
-		<div class="relative">
-			<!-- Chart Container -->
-			<div ref="chartContainer" class="w-full h-[400px]"></div>
-
-			<!-- Loading Overlay -->
-			<div
-				v-if="loading"
-				class="absolute inset-0 bg-white/50 dark:bg-gray-800/50 flex items-center justify-center">
-				<div
-					class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-			</div>
-		</div>
+	<div class="relative">
+		<div id="tv_chart_container" class="w-full h-[600px]"></div>
 	</div>
 </template>

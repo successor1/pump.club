@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Http\Resources\User;
+use App\Models\Factory;
+use App\Models\Rate;
 use App\Models\Setting;
 use Auth;
 use Cache;
@@ -82,6 +84,15 @@ class HandleInertiaRequests extends Middleware
             ...(config('evm.ankr_key', null) ? ['ankr' => config('evm.ankr_key')] : []),
             ...(config('evm.blastapi_key', null) ? ['blast' => config('evm.blastapi_key')] : []),
             ...(config('evm.infura_key', null) ? ['infura' => config('evm.infura_key')] : []),
+            'evm' => collect(config('evm'))->values()->reject(function ($evm) {
+                return !is_array($evm) || !isset($evm['chainId']) || !isset($evm['symbol']);
+            })->keyBy('chainId'),
+            'activeChains' => function () {
+                return Factory::query()->pluck('chainId')->values()->unique()->all();
+            },
+            'usdRates' =>  function () {
+                return Rate::query()->pluck('usd_rate', 'chainId')->all();
+            },
         ];
     }
 }

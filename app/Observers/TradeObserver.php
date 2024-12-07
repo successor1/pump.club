@@ -2,17 +2,26 @@
 
 namespace App\Observers;
 
-use App\Actions\Candle;
 use App\Models\Trade;
 use App\Events\NewTradeEvent;
+use App\Services\CandleService;
 
 class TradeObserver
 {
-    public function created(Trade $trade)
+    protected $candleService;
+
+    public function __construct(CandleService $candleService)
     {
-        // Queue Broadcast of the new trade event
+        $this->candleService = $candleService;
+    }
+
+    /**
+     * Handle the Trade "created" event.
+     */
+    public function created(Trade $trade): void
+    {
         NewTradeEvent::dispatch($trade);
-        // Update candles
-        app(Candle::class)->update($trade);
+        // Update current period candles
+        $this->candleService->updateCurrentPeriod($trade);
     }
 }

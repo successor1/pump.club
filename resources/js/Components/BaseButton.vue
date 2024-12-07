@@ -26,6 +26,10 @@
 			type: Boolean,
 			default: false,
 		},
+		url: {
+			type: Boolean,
+			default: false,
+		},
 		size: {
 			type: String,
 			default: "sm",
@@ -50,7 +54,7 @@
 	}));
 
 	const comp = computed(() =>
-		props.link ? Link : props.url ? "href" : "button",
+		props.link ? Link : props.url ? "a" : "button",
 	);
 
 	const colorClasses = computed(() => {

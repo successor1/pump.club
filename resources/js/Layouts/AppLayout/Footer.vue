@@ -10,9 +10,9 @@
 	<footer class="bg-gray-800 text-gray-300">
 		<div class="bg-gradient-to-b from-primary/15 via-black to-black">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-				<div class="grid grid-cols-1 md:grid-cols-6 gap-8">
+				<div class="grid grid-cols-2 md:grid-cols-6 gap-8">
 					<!-- Brand Column -->
-					<div class="space-y-4 md:col-span-2">
+					<div class="space-y-4 col-span-2">
 						<Link class="flex items-center" href="/">
 							<ApplicationLogo
 								class="block h-8 w-auto font-semibold" />

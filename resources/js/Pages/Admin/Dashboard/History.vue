@@ -57,7 +57,7 @@
 								<td class="" role="cell">
 									<span
 										class="cursor-pointer select-none font-semibold hover:text-blue-600">
-										{{ order.qty }}
+										{{ parseFloat(order.qty).toFixed() }}
 										{{ order.launchpad.symbol }}
 									</span>
 								</td>

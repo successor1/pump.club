@@ -47,6 +47,7 @@ class NewMessage implements ShouldBroadcast
         return [
             'message' => [
                 'id' => $this->message->id,
+                'user_id' => $this->message->user_id,
                 'uuid' => $this->message->uuid,
                 'message' => $this->message->message,
                 'image' => $this->message->image,

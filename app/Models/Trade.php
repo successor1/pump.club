@@ -48,6 +48,7 @@ class Trade extends Model
         'address',
         'qty',
         'amount',
+        'usd',
         'type'
     ];
 

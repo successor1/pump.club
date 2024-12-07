@@ -352,6 +352,7 @@ export const useLaunchpadInfo = (launchpad) => {
 
 export const useLockInfo = (launchpad) => {
     const publicClient = getPublicClient(useConfig());
+    const { address } = useAccount();
     const info = reactive({
         positionManager: zeroAddress,
         token: zeroAddress,
@@ -425,7 +426,7 @@ export const useLockInfo = (launchpad) => {
      * use simulation
      */
     info.updateCheckFees = async () => {
-        const { owner, isLocked, lockedAt } = await publicClient.readContract({
+        const [owner, , isLocked, lockedAt] = await publicClient.readContract({
             abi: launchpad.factory.lock_abi,
             address: launchpad.factory.lock,
             functionName: 'lockedNFTs',
@@ -435,29 +436,27 @@ export const useLockInfo = (launchpad) => {
         info.isLocked = isLocked;
         info.lockedAt = lockedAt;
         info.unlocksAt = parseInt(lockedAt) + (60 * 60 * 24 * 365 * 10);
-        const { token0, feeGrowthInside0LastX128, feeGrowthInside1LastX128 } = await publicClient.readContract({
+        const [, , token0] = await publicClient.readContract({
             abi: positionAbi,
             address: info.positionManager,
             functionName: 'positions',
             args: [info.lpTokenId]
         });
         // simulation method? // could revert!!!
-        const { amount0, amount1 } = await publicClient.simulateContract({
+        const result = await publicClient.simulateContract({
+            account: address.value,
             abi: launchpad.factory.lock_abi,
             address: launchpad.factory.lock,
             functionName: 'claimFees',
             args: [info.lpTokenId]
         });
+
         if (`${token0}`.toLowerCase() === `${info.weth}`.toLocaleLowerCase()) {
-            info.swethFees = formatEther(feeGrowthInside0LastX128);
-            info.toLowerCase = formatEther(feeGrowthInside1LastX128);
-            info.swethFees = formatEther(amount0);
-            info.toLowerCase = formatEther(amount1);
+            info.wethFees = formatEther(result.result[0]);
+            info.tokenFees = formatEther(result.result[1]);
         } else {
-            info.wethFees = formatEther(feeGrowthInside1LastX128);
-            info.toLowerCase = formatEther(feeGrowthInside0LastX128);
-            info.wethFees = formatEther(amount1);
-            info.toLowerCase = formatEther(amount0);
+            info.wethFees = formatEther(result.result[1]);
+            info.tokenFees = formatEther(result.result[0]);
         }
     };
     const { chainId } = useAccount();
@@ -466,4 +465,3 @@ export const useLockInfo = (launchpad) => {
     }, { immediate: true });
     return info;
 };
-

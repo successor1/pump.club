@@ -211,10 +211,19 @@
 		await state.call("withdrawTokenAllocation", [address.value], 0, null);
 		info.updateInfo();
 	};
-
+	const finalizeForm = useForm({
+		pool: null,
+	});
 	const finalizeCurve = async () => {
 		await state.call("finalizeCurve", []);
-		info.updateInfo();
+		await info.updateInfo();
+		finalizeForm.pool = info.uniswapPool;
+		finalizeForm.put(
+			window.route("launchpads.finalize", {
+				launchpad: props.launchpad.id,
+			}),
+			{ preserveScroll: true, preserveState: true },
+		);
 	};
 
 	const maxPrebond = computed(() => {
@@ -225,7 +234,7 @@
 </script>
 
 <template>
-	<div class="w-full md:w-[350px] grid gap-4">
+	<div class="w-full grid gap-4">
 		<div
 			v-if="info.currentPhase < 2"
 			class="bg-gray-800 p-4 rounded-lg border border-none text-gray-400 grid gap-4">
@@ -581,7 +590,7 @@
 				ref="nofollow"
 				target="_blank"
 				:href="`https://app.uniswap.org/swap?inputCurrency=${launchpad.token}`">
-				Swap on Uniswap
+				{{ $t("Swap on Uniswap") }}
 			</a>
 		</div>
 	</div>

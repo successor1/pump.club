@@ -21,8 +21,14 @@ class Trade extends JsonResource
             'address' => $this->address,
             'qty' => $this->qty,
             'amount' => $this->amount,
+            'price' => bcdiv($this->amount, $this->qty, 18),
+            'usd_price' => bcdiv($this->usd, $this->qty, 8),
+            'usd' => $this->usd,
             'type' => $this->type,
-            'date' => $this->created_at->toFormattedDateString(),
+            'date' => now()->gt($this->created_at->addDay())
+                ? $this->created_at->toDateTimeString()
+                : $this->created_at->diffForHumans(),
+            'created_at' => $this->created_at,
             'launchpad' => new Launchpad($this->whenLoaded('launchpad')),
         ];
     }

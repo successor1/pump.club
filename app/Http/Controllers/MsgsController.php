@@ -38,7 +38,7 @@ class MsgsController extends Controller
             'image_upload' => 'required|boolean'
         ]);
         $msg = new Msg();
-        $msg->user_id = Auth::id();
+        $msg->user_id = $request->user()->id;
         $msg->launchpad_id = $validated['launchpad_id'];
         $msg->message = $validated['message'] ?? null;
         $msg->save();
@@ -51,7 +51,7 @@ class MsgsController extends Controller
         // Broadcast the new message
         $msg->load('user');
         NewMessage::dispatch($msg);
-        return new MessageResource($msg->load('user'));
+        return back();
     }
 
     /**

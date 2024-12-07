@@ -4,12 +4,18 @@
 
 	import { PaperAirplaneIcon } from "@heroicons/vue/24/outline";
 	import { useForm } from "@inertiajs/vue3";
+	import { MessageSquareHeart } from "lucide-vue-next";
 
 	import BaseButton from "@/Components/BaseButton.vue";
 	import FormInput from "@/Components/FormInput.vue";
+	import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 
 	const props = defineProps({
 		launchpadId: {
+			type: Number,
+			required: true,
+		},
+		devId: {
 			type: Number,
 			required: true,
 		},
@@ -19,139 +25,7 @@
 		},
 	});
 
-	const messages = ref([
-		{
-			uuid: "msg-001",
-			user_id: 1, // Current user
-			message:
-				"Hey everyone! Just joined the chat. Looking forward to connecting with you all! 👋",
-			user: {
-				id: 1,
-				name: "John Doe",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/men/1.jpg",
-				address: "0x1234567890abcdef",
-			},
-		},
-		{
-			uuid: "msg-002",
-			user_id: 2,
-			message:
-				"Welcome John! Great to have you here. How did you find out about our community?",
-			user: {
-				id: 2,
-				name: "Alice Smith",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/women/1.jpg",
-				address: "0xabcdef1234567890",
-			},
-		},
-		{
-			uuid: "msg-003",
-			user_id: 1,
-			message:
-				"Thanks Alice! I heard about it through the blockchain conference last week. By the way, check out this cool NFT I just minted:",
-			image: "/api/placeholder/400/300",
-			user: {
-				id: 1,
-				name: "John Doe",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/men/1.jpg",
-				address: "0x1234567890abcdef",
-			},
-		},
-		{
-			uuid: "msg-004",
-			user_id: 3,
-			message: "That's an impressive piece! The detail in it is amazing.",
-			user: {
-				id: 3,
-				name: null,
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/men/2.jpg",
-				address: "0x9876543210fedcba",
-			},
-		},
-		{
-			uuid: "msg-005",
-			user_id: 1,
-			message:
-				"Appreciate it! I've been working on improving my digital art skills.",
-			user: {
-				id: 1,
-				name: "John Doe",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/men/1.jpg",
-				address: "0x1234567890abcdef",
-			},
-		},
-		{
-			uuid: "msg-006",
-			user_id: 4,
-			message:
-				"Hello everyone! Just dropping by to share our latest community update:",
-			image: "/api/placeholder/600/400",
-			user: {
-				id: 4,
-				name: "Emma Wilson",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/women/2.jpg",
-				address: "0xfedc123456789abc",
-			},
-		},
-		{
-			uuid: "msg-007",
-			user_id: 2,
-			message:
-				"Thanks for sharing, Emma! The new features look promising.",
-			user: {
-				id: 2,
-				name: "Alice Smith",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/women/1.jpg",
-				address: "0xabcdef1234567890",
-			},
-		},
-		{
-			uuid: "msg-008",
-			user_id: 1,
-			message:
-				"Agreed! Can't wait to try them out. Quick question - when is the next community call?",
-			user: {
-				id: 1,
-				name: "John Doe",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/men/1.jpg",
-				address: "0x1234567890abcdef",
-			},
-		},
-		{
-			uuid: "msg-009",
-			user_id: 4,
-			message:
-				"It's scheduled for next Tuesday at 2 PM UTC. I'll send out the calendar invites shortly!",
-			user: {
-				id: 4,
-				name: "Emma Wilson",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/women/2.jpg",
-				address: "0xfedc123456789abc",
-			},
-		},
-		{
-			uuid: "msg-010",
-			user_id: 1,
-			message:
-				"Perfect, thanks! Added it to my calendar. See you all there! 📅",
-			user: {
-				id: 1,
-				name: "John Doe",
-				profile_photo_url:
-					"https://randomuser.me/api/portraits/men/1.jpg",
-				address: "0x1234567890abcdef",
-			},
-		},
-	]);
+	const messages = ref([...props.initialMessages]);
 	const imagePreview = ref(null);
 	const uploadPath = ref(null);
 
@@ -167,6 +41,7 @@
 		window.Echo.channel(`launchpad.${props.launchpadId}`).listen(
 			"NewMessage",
 			(e) => {
+				console.log(e);
 				messages.value.push(e.message);
 				scrollToBottom();
 			},
@@ -195,13 +70,6 @@
 		});
 	};
 
-	const removeImage = () => {
-		form.image_path = null;
-		form.image_upload = false;
-		imagePreview.value = null;
-		uploadPath.value = null;
-	};
-
 	watch(
 		messages,
 		() => {
@@ -212,9 +80,18 @@
 </script>
 
 <template>
-	<div class="flex flex-col h-[500px] rounded-lg shadow">
+	<div class="flex flex-col h-[900px] bg-gray-850 p-4 rounded-lg shadow">
 		<!-- Messages Container -->
-		<div class="flex-1 overflow-y-auto pb-4 messages-container">
+		<div
+			v-if="messages.length == 0"
+			class="w-full flex flex-col items-center justify-center h-full">
+			<div class="p-8 bg-gray-800 rounded">
+				<MessageSquareHeart class="w-16 h-16 stroke-[0.8]" />
+				<h3 class="text-xl font-extralight">No chat messages found</h3>
+				<h3>Be the first to Leave a message</h3>
+			</div>
+		</div>
+		<div class="overflow-y-auto pb-4 messages-container">
 			<div
 				v-for="message in messages"
 				:key="message.uuid"
@@ -242,6 +119,13 @@
 									message.user.name ||
 									message.user.address.substring(0, 6)
 								}}
+								<BaseButton
+									v-if="message.user_id === devId"
+									class="self-center ml-3 pointer-events-none"
+									size="xss"
+									outlined>
+									DEV
+								</BaseButton>
 							</div>
 							<p class="text-sm">{{ message.message }}</p>
 							<img
@@ -266,9 +150,11 @@
 							size="md"
 							placeholder="Type your message..."></FormInput>
 					</div>
-					<BaseButton>
+
+					<BaseButton v-if="$page.props.auth.user">
 						<PaperAirplaneIcon class="w-6 h-6" />
 					</BaseButton>
+					<Web3Auth size="md" v-else />
 				</div>
 			</form>
 		</div>

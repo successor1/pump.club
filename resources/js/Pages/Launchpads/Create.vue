@@ -3,6 +3,7 @@
 
 	import { useForm } from "@inertiajs/vue3";
 	import { useChainId } from "@wagmi/vue";
+	import { ComponentIcon } from "lucide-vue-next";
 	import { parseEventLogs } from "viem";
 
 	import ChainSymbol from "@/Components/ChainSymbol.vue";
@@ -88,8 +89,12 @@
 	<Head :title="`New Launchpad`" />
 	<AppLayout>
 		<div
-			class="card max-w-3xl w-full mx-auto dark:bg-gray-850 sm:p-12 h-full border-0 card-border">
+			class="card max-w-3xl w-full mb-6 mx-auto dark:bg-gray-850 sm:p-12 sm:!pt-6 h-full border-0 card-border">
 			<div class="card-body card-gutterless h-full">
+				<h3 class="mb-3 flex items-center gap-2">
+					<ComponentIcon class="w-7 h-7 stroke-[0.7] text-sky-400" />
+					{{ $t("Launch Meme Token") }}
+				</h3>
 				<div class="grid gap-6">
 					<div class="border p-3 border-gray-650 bg-gray-750/50">
 						<h3 class="text-lg mb-4 !text-primary font-extralight">

@@ -52,6 +52,8 @@ class Launchpad extends Model
         'factory_id',
         'contract',
         'token',
+        'pool',
+        'graph',
         'name',
         'symbol',
         'description',
@@ -96,6 +98,16 @@ class Launchpad extends Model
     public function trades(): HasMany
     {
         return $this->hasMany(Trade::class, 'launchpad_id', 'id');
+    }
+
+    /**
+
+     * Get the trades this model Owns.
+     *
+     */
+    public function holders(): HasMany
+    {
+        return $this->hasMany(Holder::class, 'launchpad_id', 'id');
     }
 
     /**

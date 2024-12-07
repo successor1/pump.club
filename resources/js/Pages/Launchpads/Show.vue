@@ -13,13 +13,16 @@
 	import DevStream from "@/Pages/Launchpads/TradingView/DevStream.vue";
 	import Holders from "@/Pages/Launchpads/TradingView/Holders.vue";
 	import Info from "@/Pages/Launchpads/TradingView/Info.vue";
+	import LockCard from "@/Pages/Launchpads/TradingView/LockCard.vue";
 	import Trades from "@/Pages/Launchpads/TradingView/Trades.vue";
-	import TradingView from "@/Pages/Launchpads/TradingView/TradingView.vue";
-	import LockCard from "./TradingView/LockCard.vue";
+	import TradingViewChart from "@/Pages/Launchpads/TradingView/TradingViewChart.vue";
 
 	defineProps({
 		launchpad: Object,
-		tops: Array,
+		top: Array,
+		stats: Object,
+		rate: Object,
+		poolstats: Object,
 	});
 
 	const tabs = [
@@ -38,19 +41,11 @@
 				<div
 					class="flex w-full items-center overflow-x-auto [scrollbar-width:none]">
 					<div class="flex w-full items-center">
-						<BarButton active />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
-						<BarButton />
+						<BarButton
+							v-for="launch in top"
+							:key="launch.id"
+							:launch="launch"
+							:active="launch.id === launchpad.id" />
 					</div>
 				</div>
 				<div
@@ -60,9 +55,7 @@
 		<div class="flex space-x-8 mt-4 justify-center">
 			<div class="flex flex-col gap-2 w-2/3">
 				<div class="h-4/8">
-					<TradingView
-						:launchpad-id="launchpad.id"
-						:symbol="launchpad.symbol" />
+					<TradingViewChart :launchpad="launchpad" />
 				</div>
 				<div class="flex gap-2 h-fit mt-6">
 					<BaseButton
@@ -84,21 +77,36 @@
 					</BaseButton>
 				</div>
 
-				<div class="text-gray-300 mt-4 grid gap-1 relative h-[540px]">
-					<div
+				<div class="text-gray-300 mt-4 grid gap-1 relative h-full mb-8">
+					<Chat
 						v-if="activeTab == 'Chat'"
-						class="flex flex:col md:flex-row items-center">
-						<Chat class="md:w-full" />
-					</div>
-					<Trades v-if="activeTab == 'Trades'" />
-					<Holders v-if="activeTab == 'Holders'" />
+						:launchpadId="launchpad.id"
+						:devId="launchpad.user_id"
+						:initial-messages="$page.props.msgs"
+						class="md:w-full" />
+					<Trades
+						:trades="$page.props.trades"
+						:chainId="launchpad.chainId"
+						:bcurve="launchpad.contract"
+						v-if="activeTab == 'Trades'" />
+					<Holders
+						:holders="$page.props.holders"
+						:chainId="launchpad.chainId"
+						:launchpad="launchpad"
+						:usdRate="rate.usd_rate"
+						v-if="activeTab == 'Holders'" />
 					<DevStream v-if="activeTab == 'Dev Stream'" />
 				</div>
 			</div>
-			<div class="grid mb-12 gap-4 h-fit w-fit mx-auto">
+			<div class="grid mb-12 gap-4 h-fit w-fit mx-auto px-3">
 				<BuyCard :launchpad="launchpad" />
-				<LockCard :launchpad="launchpad" />
-				<Info />
+				<LockCard v-if="launchpad.isOwner" :launchpad="launchpad" />
+				<Info
+					:rank="stats.rank"
+					:rate="rate"
+					:totalVolume="stats.totalVolume"
+					:totalLaunchpads="stats.totalLaunchpads"
+					:launchpad="launchpad" />
 			</div>
 		</div>
 	</AppLayout>

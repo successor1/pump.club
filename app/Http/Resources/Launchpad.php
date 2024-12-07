@@ -34,11 +34,21 @@ class Launchpad extends JsonResource
             'featured' => $this->featured,
             'kingofthehill' => $this->kingofthehill,
             'active' => $this->active,
+            'volume24h' => $this->volume24h ?? '0.00',
+            'age' => $this->created_at->diffForHumans(),
+            'trades_count' => $this->trades_count,
+            // to be pulled
+            'percentage' => 0,
+            'marketCap' => 0,
+            'isFinalized' => false,
+            'isOwner' => $this->user_id === $request->user()?->id,
+            'createdAgo' => $this->created_at->diffForHumans(),
             'factory' => new Factory($this->whenLoaded('factory')),
             'user' => new ViewUser($this->whenLoaded('user')),
             'trades' => Trade::collection($this->whenLoaded('trades')),
             'msgs' => Msg::collection($this->whenLoaded('msgs')),
             'uploads' => Upload::collection($this->whenLoaded('uploads')),
+
         ];
     }
 }

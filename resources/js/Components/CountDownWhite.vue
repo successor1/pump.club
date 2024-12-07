@@ -22,16 +22,16 @@
 	<!-- Years Format (>= 365 days) -->
 	<div v-if="showYearsFormat" class="grid grid-cols-4 gap-5 text-center">
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
-				class="font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
+				class="font-mono countdown font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				{{ years }}
 			</span>
 			<span class="text-xs" v-if="simple">{{ $t("years") }}</span>
 			<span v-else>{{ $t("years") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': months ?? '00' }"></span>
@@ -40,7 +40,7 @@
 			<span v-else>{{ $t("months") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': days ?? '00' }"></span>
@@ -49,7 +49,7 @@
 			<span v-else>{{ $t("days") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': seconds ?? '00' }"></span>
@@ -64,7 +64,7 @@
 		v-else-if="showMonthsFormat"
 		class="grid grid-cols-4 gap-5 text-center">
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': months ?? '00' }"></span>
@@ -73,7 +73,7 @@
 			<span v-else>{{ $t("months") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': days ?? '00' }"></span>
@@ -82,7 +82,7 @@
 			<span v-else>{{ $t("days") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': hours ?? '00' }"></span>
@@ -91,7 +91,7 @@
 			<span v-else>{{ $t("hours") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': seconds ?? '00' }"></span>
@@ -104,7 +104,7 @@
 	<!-- Regular Format (<100 days) -->
 	<div v-else class="grid grid-cols-4 gap-5 text-center">
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-1.5">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-1.5">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': days ?? '00' }"></span>
@@ -113,7 +113,7 @@
 			<span v-else>{{ $t("days") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-2">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-2">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': hours ?? '00' }"></span>
@@ -122,7 +122,7 @@
 			<span v-else>{{ $t("hours") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-2">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-2">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': minutes ?? '00' }"></span>
@@ -131,7 +131,7 @@
 			<span v-else>{{ $t("min") }}</span>
 		</div>
 		<div
-			class="flex flex-col border border-amber-300 dark:border-amber-600 bg-amber-100/20 dark:bg-amber-700/10 rounded-md p-2">
+			class="flex flex-col border border-amber-300 dark:border-gray-700 bg-amber-100/20 dark:bg-gray-600/10 rounded-md p-2">
 			<span
 				class="countdown font-mono font-semibold text-gray-600 dark:text-gray-200 text-sm md:text-xl flex justify-center">
 				<span :style="{ '--value': seconds ?? '00' }"></span>

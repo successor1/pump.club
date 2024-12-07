@@ -36,7 +36,12 @@ class NewTradeEvent implements ShouldBroadcast
             'qty' => $this->trade->qty,
             'amount' => $this->trade->amount,
             'type' => $this->trade->type,
+            'price' => bcdiv($this->trade->amount, $this->trade->qty, 18),
+            'usd_price' => bcdiv($this->trade->usd, $this->trade->qty, 8),
             'created_at' => $this->trade->created_at,
+            'date' => now()->gt($this->trade->created_at->addDay())
+                ? $this->trade->created_at->toDateTimeString()
+                : $this->trade->created_at->diffForHumans(),
             'price' => bcdiv($this->trade->amount, $this->trade->qty, 18)
         ];
     }

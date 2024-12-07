@@ -69,7 +69,7 @@
 	<div class="flex items-start space-x-4">
 		<div class="min-w-0 flex-1 relative">
 			<div
-				class="border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm overflow-hidden focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-500">
+				class="border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm overflow-hidden focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500">
 				<textarea
 					ref="textarea"
 					:rows="rows"

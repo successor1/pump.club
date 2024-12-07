@@ -14,6 +14,7 @@
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
+        <script src="https://s3.tradingview.com/tv.js"></script>
     </head>
     <body class="font-sans antialiased">
         @inertia

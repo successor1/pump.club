@@ -1,6 +1,6 @@
 <script setup>
+	import { useAccount } from "@wagmi/vue";
 	import { Vault } from "lucide-vue-next";
-	import { zeroAddress } from "viem";
 
 	import BaseButton from "@/Components/BaseButton.vue";
 	import ChainSymbol from "@/Components/ChainSymbol.vue";
@@ -17,28 +17,24 @@
 	const info = useLockInfo(props.launchpad);
 	const state = useReactiveContractCall(
 		props.launchpad.factory.lock_abi,
-		props.launchpad.lock,
+		props.launchpad.factory.lock,
 	);
+	const { address } = useAccount();
 	const claimFees = async () => {
-		await state.call(
-			"claimFees",
-			[info.lpTokenId, zeroAddress, zeroAddress],
-			0,
-			null,
-		);
+		await state.call("claimFees", [info.lpTokenId], 0, null);
 		if (state.error) return;
 		info.updateInfo();
 	};
 
 	const unlockNft = async () => {
-		await state.call("unlockNFT", [info.lpTokenId], 0, null);
+		await state.call("unlockNFT", [info.lpTokenId, address.value], 0, null);
 		if (state.error) return;
 		info.updateInfo();
 	};
 </script>
 
 <template>
-	<div v-if="info.currentPhase === 2" class="w-full md:w-[350px] grid gap-4">
+	<div v-if="info.currentPhase === 2" class="w-full grid gap-4">
 		<div
 			class="bg-gray-800 p-4 text-center rounded-lg border border-none text-gray-400 grid gap-4">
 			<h3 class="text-lg font-medium flex justify-center items-center">
@@ -46,12 +42,12 @@
 				{{ $t("Claim Uniswap fees") }}
 			</h3>
 			<h3 class="font-extralight !text-primary">
-				{{ parseFloat(info.tokenFees).toFixed(8) }}
+				{{ parseFloat(info.tokenFees).toFixed(8) * 1 }}
 				{{ launchpad.symbol }}
 			</h3>
-			<hr class="my-2 bg-gray-750" />
+			<hr class="my-2 border-gray-650" />
 			<h3 class="font-extralight !text-primary">
-				{{ parseFloat(info.wethFees).toFixed(8) }}
+				{{ parseFloat(info.wethFees).toFixed(8) * 1 }}
 				<ChainSymbol :chainId="launchpad.chainId" />
 			</h3>
 			<TxStatus v-if="state.called === 'claimFees'" :state="state" />
@@ -64,6 +60,7 @@
 			class="p-4 text-center rounded-lg border border-gray-800 text-gray-400 grid gap-4">
 			<h3 class="font-extralight !text-primary">Unlock Timeleft</h3>
 			<CountDownWhite
+				simple
 				v-if="info.unlocksAt > 0"
 				:timestamp="info.unlocksAt" />
 			<TxStatus v-if="state.called === 'unlockNFT'" :state="state" />
