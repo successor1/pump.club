@@ -42,6 +42,9 @@ cd ${WWW_DIR}/${SITE_DIR} && {
     php artisan clear-compiled
     php artisan optimize
     php artisan storage:link
+       # Create installation marker
+    mkdir -p storage/app/public
+    echo "{\"installed_at\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\", \"version\": \"$(php artisan --version | grep -oP 'Laravel Framework \K[\d.]+')\", \"app_version\": \"$(grep -oP "(?<='version' => ').*(?=')" config/app.php || echo '1.0.0')\"}" > storage/app/public/installed
     sudo chgrp -R www-data storage bootstrap/cache
     sudo chmod -R ug+rwx storage bootstrap/cache
 }
