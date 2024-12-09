@@ -1,5 +1,5 @@
 <script setup>
-	import { computed } from "vue";
+	import { computed, ref, watch } from "vue";
 
 	import { router, usePage } from "@inertiajs/vue3";
 	import { createAppKit, useAppKit } from "@reown/appkit/vue";
@@ -75,9 +75,20 @@
 			console.error("Verification failed:", error);
 		}
 	};
-
+	const isSigningOut = ref(false);
 	const signOut = async () => {
-		if (authCheck.value) router.post(window.route("logout"));
+		if (isSigningOut.value) return;
+		isSigningOut.value = true;
+		if (authCheck.value)
+			router.post(
+				window.route("logout"),
+				{},
+				{
+					onFinish() {
+						isSigningOut.value = false;
+					},
+				},
+			);
 	};
 
 	const signIn = async () => {
@@ -90,6 +101,14 @@
 		onDisconnect() {
 			signOut();
 		},
+	});
+	watch([isConnected, authCheck], ([isConnected, authCheck]) => {
+		if (isConnected && !authCheck) {
+			return signIn();
+		}
+		if (!isConnected && authCheck) {
+			return signOut();
+		}
 	});
 </script>
 

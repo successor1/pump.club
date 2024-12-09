@@ -16,11 +16,12 @@ class Promo extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'image' => $this->image,
             'url' => $this->url,
-            'starts_at' => $this->starts_at,
-            'ends_at' => $this->ends_at,
+            'starts_at' => $this->starts_at->toFormattedDateString(),
+            'ends_at' => $this->ends_at->toFormattedDateString(),
             'active' => $this->active,
 
         ];

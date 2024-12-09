@@ -2,7 +2,10 @@
 	import { Clock, Eye, LucideScanQrCode } from "lucide-vue-next";
 
 	import ChainSymbol from "@/Components/ChainSymbol.vue";
+	import { useBillions } from "@/hooks";
 	import { shortenAddress } from "@/lib/wagmi";
+	import LatestUsers from "@/Pages/Admin/Dashboard/LatestUsers.vue";
+	import MailSettings from "@/Pages/Admin/Dashboard/MailSettings.vue";
 	import OrderBadge from "@/Pages/Admin/Dashboard/OrderBadge.vue";
 	import SiteSettings from "@/Pages/Admin/Dashboard/SiteSettings.vue";
 
@@ -13,8 +16,9 @@
 </script>
 <template>
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-		<div class="card lg:col-span-2 card-border">
-			<div>
+		<div class="lg:col-span-2 grid gap-8">
+			<LatestUsers />
+			<div class="card-border card">
 				<div
 					class="flex flex-row card-body items-center justify-between mb-6">
 					<div class="flex items-center gap-3">
@@ -57,7 +61,7 @@
 								<td class="" role="cell">
 									<span
 										class="cursor-pointer select-none font-semibold hover:text-blue-600">
-										{{ parseFloat(order.qty).toFixed() }}
+										{{ useBillions(order.qty) }}
 										{{ order.launchpad.symbol }}
 									</span>
 								</td>
@@ -84,7 +88,11 @@
 										v-slot="chain">
 										<div
 											class="flex flex-row align-middle items-center">
-											{{ order.amount }}
+											{{
+												parseFloat(
+													order.amount,
+												).toFixed(6) * 1
+											}}
 											<span class="ml-1">
 												{{ chain?.symbol }}
 											</span>
@@ -112,7 +120,10 @@
 				</div>
 			</div>
 		</div>
-		<SiteSettings :setting="$page.props.setting" />
+		<div>
+			<SiteSettings :setting="$page.props.setting" />
+			<MailSettings class="mt-6" />
+		</div>
 	</div>
 </template>
 <style scoped>

@@ -20,6 +20,7 @@ class TradeObserver
      */
     public function created(Trade $trade): void
     {
+        
         NewTradeEvent::dispatch($trade);
         // Update current period candles
         $this->candleService->updateCurrentPeriod($trade);

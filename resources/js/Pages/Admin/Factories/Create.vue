@@ -51,6 +51,7 @@
 
 	watch(chainId, (chainId) => {
 		// update defualts
+		form.chainId = chainId;
 		if (props.config[chainId]) {
 			const config = props.config[chainId];
 			form.virtualEth = config.virtualEth;
@@ -169,6 +170,7 @@
 						<div class="card-body card-gutterless h-full">
 							<div
 								class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+								<appkit-network-button />
 								<FormInput
 									label="Factory Name. (A simple label for your private use)"
 									v-model="form.name"

@@ -63,17 +63,3 @@ Route::name('trades.')->controller(TradesController::class)->group(function () {
     Route::get('/api/launchpad/{launchpad:contract}/candles', 'getCandles')->name('candles');
 });
 #trades
-
-
-#promos
- Route::name('promos')->controller(PromosController::class)->group(function () {
-    Route::get('/promos', 'index')->name('index');
-    Route::get('/promos/create', 'create')->name('create');
-    Route::post('/promos/store', 'store')->name('store');
-    Route::get('/promos/{promo}/show', 'show')->name('show');
-    Route::get('/promos/{promo}/edit', 'edit')->name('edit');
-    Route::put('/promos/{promo}', 'update')->name('update');
-    Route::put('/promos/toggle/{promo}', 'toggle')->name('toggle');
-    Route::delete('/promos/{promo}', 'destroy')->name('destroy');
-});
-#promos

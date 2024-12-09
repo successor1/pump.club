@@ -13,6 +13,7 @@
 	import SecondaryButton from "@/Components/SecondaryButton.vue";
 	import TxHash from "@/Components/TxHash.vue";
 	import VueIcon from "@/Components/VueIcon.vue";
+	import { useBillions } from "@/hooks";
 	import AdminLayout from "@/Layouts/AdminLayout.vue";
 	import OrderBadge from "@/Pages/Admin/Dashboard/OrderBadge.vue";
 
@@ -141,14 +142,16 @@
 												</td>
 												<td
 													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
-													{{ trade.qty
-													}}{{
-														trade.launchpad.symbol
-													}}
+													{{ useBillions(trade.qty) }}
+													{{ trade.launchpad.symbol }}
 												</td>
 												<td
 													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
-													{{ trade.amount }}
+													{{
+														parseFloat(
+															trade.amount,
+														).toFixed(5) * 1
+													}}
 													<ChainSymbol
 														:chainId="
 															trade.launchpad

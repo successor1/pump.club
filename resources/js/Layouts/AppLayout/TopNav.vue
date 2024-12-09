@@ -32,7 +32,7 @@
 							:class="{
 								'text-primary': $page.props.type == 'mine',
 							}">
-							{{ $t("My Tokens") }}
+							{{ $t("My Memes") }}
 						</Link>
 						<button
 							@click="showHowItworks = !showHowItworks"
@@ -77,7 +77,7 @@
 
 					<!-- Action Buttons -->
 					<PrimaryButton link href="/launch" size="xs" class="mr-2">
-						{{ $t("Launch Token") }}
+						{{ $t("Launch Meme") }}
 					</PrimaryButton>
 					<Web3Auth />
 					<AuthLink />
@@ -130,7 +130,7 @@
 						'bg-gray-900 text-primary':
 							$page.url.startsWith('/my-tokens'),
 					}">
-					{{ $t("My Tokens") }}
+					{{ $t("My Memes") }}
 				</Link>
 				<button
 					@click="showHowItworks = !showHowItworks"
@@ -156,7 +156,7 @@
 					<!-- Action Buttons -->
 					<div class="space-y-2 px-3">
 						<PrimaryButton size="sm" class="w-full justify-center">
-							{{ $t("Launch Token") }}
+							{{ $t("Launch Meme") }}
 						</PrimaryButton>
 						<PrimaryButton
 							size="sm"

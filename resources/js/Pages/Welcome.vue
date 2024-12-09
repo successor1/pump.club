@@ -22,6 +22,7 @@
 	import { useLaunchpadsData } from "@/hooks/useLaunchpadsData";
 	import AppLayout from "@/Layouts/AppLayout.vue";
 	import HowItWorksModal from "@/Layouts/AppLayout/HowItWorksModal.vue";
+	import AnimationsRow from "@/Pages/Launchpads/AnimationsRow.vue";
 	import BarButton from "@/Pages/Launchpads/BarButton.vue";
 	import IndexCard from "@/Pages/Launchpads/IndexCard.vue";
 
@@ -59,6 +60,7 @@
 			maxWait: 700,
 		},
 	);
+	const animate = ref(true);
 </script>
 
 <template>
@@ -110,24 +112,32 @@
 								{{ $t("How Does it work") }}
 							</BaseButton>
 							<BaseButton link href="/launch" outlined>
-								{{ $t("Launch your token") }}
+								{{ $t("Launch your meme") }}
 							</BaseButton>
 						</div>
 					</div>
 					<div class="flex items-center gap-3">
-						<img
-							v-for="(ad, i) in $page.props.ads"
-							:key="i"
-							class="w-auto h-40 border border-gray-650 rounded"
-							:src="ad" />
+						<a
+							v-for="ad in $page.props.ads"
+							:key="ad.id"
+							:href="ad.url">
+							<img
+								class="w-auto h-40 border border-gray-650 rounded"
+								:src="ad.image" />
+						</a>
 					</div>
 				</div>
 				<div
-					class="flex gap-4 items-center mt-8 mx-4 justify-center sm:justify-start sm:mx-[unset] flex-wrap">
+					class="flex gap-4 items-center my-8 mx-4 justify-center sm:justify-start sm:mx-[unset] flex-wrap">
 					<appkit-network-button />
-					<BaseButton size="xss" class="font-semibold !px-4 py-1">
+					<BaseButton
+						@click="animate = !animate"
+						size="xss"
+						class="font-semibold !px-4 py-1">
 						{{ $t("Animation") }}
-						<SmallSwitch class="ml-2" />
+						<SmallSwitch
+							:modelValue="animate"
+							class="ml-2"></SmallSwitch>
 					</BaseButton>
 					<BaseButton
 						v-for="filter in filters"
@@ -159,10 +169,17 @@
 			<LoaderCircle
 				v-if="type !== 'mine' && launchpadsInfo.loading.value"
 				class="w-8 mt-5 text-white h-8 mr-2 animate-spin" />
-			<div class="grid mt-12 mb-6 md:grid-col-3 lg:grid-cols-3 gap-5">
+			<CollapseTransition>
+				<AnimationsRow
+					:initialTrades="$page.props.initialTrades"
+					v-show="animate" />
+			</CollapseTransition>
+
+			<div class="grid mb-6 md:grid-col-3 lg:grid-cols-3 gap-5">
 				<IndexCard
 					v-for="lpd in launchpadsInfo.launchpads.value"
 					:key="lpd.name"
+					:id="lpd.contract"
 					:launchpad="lpd" />
 			</div>
 			<Pagination :meta="launchpads.meta" />

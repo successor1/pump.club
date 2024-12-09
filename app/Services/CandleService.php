@@ -38,7 +38,7 @@ class CandleService
     private function updateCandlesForTimeframe(Launchpad $launchpad, string $timeframe, Carbon $from, Carbon $to): void
     {
         $timeframeSeconds = $this->timeframes[$timeframe];
-
+        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
         // Get all trades within the period
         $candles = DB::table('trades')
             ->select([
@@ -52,7 +52,7 @@ class CandleService
             ])
             ->where('launchpad_id', $launchpad->id)
             ->whereBetween('created_at', [$from, $to])
-            ->groupBy('timestamp')
+            ->groupBy(DB::raw("FLOOR(UNIX_TIMESTAMP(created_at) / $timeframeSeconds) * $timeframeSeconds"))
             ->get();
 
         foreach ($candles as $candle) {

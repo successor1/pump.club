@@ -38,6 +38,24 @@ class DashboardController extends Controller
                 $trades = Trade::query()->with('launchpad')->latest()->take(10)->get();
                 return ResourcesTrade::collection($trades);
             },
+            'users' => function () {
+                $users = User::query()->latest()->take(10)->get();
+                return ResourcesUser::collection($users);
+            },
+            'mail' => [
+                'mailer' => config('mail.from'),
+                'mailgun' => config('services.mailgun'),
+                'smtp' => collect(config('mail.mailers.smtp'))->only([
+                    'host',
+                    'port',
+                    'encryption',
+                    'username',
+                    'password',
+                ])->toArray(),
+                'posmark' => config('services.postmark'),
+                'mailersend' => config('services.mailersend'),
+                'resend' => config('services.resend'),
+            ],
             'stats' => [
                 [
                     'name' => 'users',

@@ -244,10 +244,10 @@ export const wagmiAdapter = new WagmiAdapter({
 });
 export const useWagmiAdapter = ({
     rpc = 'ankr', // default RPC provider: 'ankr', 'infura', or 'blast'
-    ankr, // ankrApiKey
+    ankr = null, // ankrApiKey
     infura, // infuraApiKey
     blast, // blastApiKey
-    chainIds = [1] // supported chainIds
+    chainIds = [56] // supported chainIds
 }) => {
     console.log(rpc, // default RPC provider: 'ankr', 'infura', or 'blast'
         ankr, // ankrApiKey
@@ -256,7 +256,7 @@ export const useWagmiAdapter = ({
         chainIds);
     // Initialize transport configurations based on provided API keys
     const transportConfigs = {
-        ankr: ankr ? ankrTransports(ankr) : {},
+        ankr: ankrTransports(ankr ?? ''),
         infura: infura ? infuraTransports(infura) : {},
         blast: blast ? blastapiTransports(blast) : {}
     };
@@ -268,12 +268,13 @@ export const useWagmiAdapter = ({
             console.warn(`Chain ID ${chainId} not supported by ${rpc} provider`);
             return acc;
         }
+        console.log(`url`, url);
         return {
             ...acc,
             [chainId]: http(url)
         };
     }, {});
-    console.log(transports);
+    console.log(`Transports`, transports);
     // Create and return the WagmiAdapter instance
     return new WagmiAdapter({
         networks: networks.filter(n => chainIds.includes(n.id)),

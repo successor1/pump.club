@@ -50,14 +50,16 @@ class PromosController extends Controller
             'name' => ['required', 'string'],
             'image_uri' => ['required', 'string'],
             'image_upload' => ['required', 'boolean'],
-            'image_path' => ['nullable', 'string', 'required_if:image_upload,true'],
+            'image_path' => ['nullable', 'array', 'required_if:image_upload,true'],
             'url' => ['required', 'url'],
-            'starts_at' => ['required', 'numeric'],
-            'ends_at' => ['required', 'numeric'],
+            'starts_at' => ['required', 'string'],
+            'ends_at' => ['required', 'string'],
+            'active' => ['required', 'boolean'],
         ]);
         $promo = new Promo;
         $promo->name = $request->name;
         $promo->url = $request->url;
+        $promo->active = $request->active;
         $promo->starts_at = Carbon::parse($request->starts_at);
         $promo->ends_at = Carbon::parse($request->ends_at);
         $promo->save();
@@ -76,7 +78,7 @@ class PromosController extends Controller
     public function edit(Request $request, Promo $promo)
     {
 
-        return Inertia::render('Promos/Edit', [
+        return Inertia::render('Admin/Promos/Edit', [
             'promo' => new PromoResource($promo)
         ]);
     }
@@ -93,12 +95,13 @@ class PromosController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string'],
-            'image_uri' => ['required', 'string'],
+            'image_uri' => ['nullable', 'required_if:image_upload,true', 'string'],
             'image_upload' => ['required', 'boolean'],
-            'image_path' => ['nullable', 'string', 'required_if:image_upload,true'],
+            'image_path' => ['nullable', 'array', 'required_if:image_upload,true'],
             'url' => ['required', 'url'],
-            'starts_at' => ['required', 'numeric'],
-            'ends_at' => ['required', 'numeric'],
+            'starts_at' => ['required', 'string'],
+            'ends_at' => ['required', 'string'],
+            'active' => ['required', 'boolean'],
         ]);
         if ($request->image_upload) {
             $upload = app(Uploads::class)->upload($request,  $promo, 'image');
@@ -108,6 +111,7 @@ class PromosController extends Controller
         $promo->url = $request->url;
         $promo->starts_at = Carbon::parse($request->starts_at);
         $promo->ends_at = Carbon::parse($request->ends_at);
+        $promo->active = $request->active;
         $promo->save();
         return back()->with('success', 'Promo updated!');
     }

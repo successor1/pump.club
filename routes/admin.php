@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\FactoriesController;
 use App\Http\Controllers\Admin\HoldersController;
 use App\Http\Controllers\Admin\LaunchpadsController;
 use App\Http\Controllers\Admin\MsgsController;
+use App\Http\Controllers\Admin\PromosController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TradesController;
 use App\Http\Controllers\Admin\UsersController;
@@ -87,5 +88,19 @@ Route::name('trades.')->controller(TradesController::class)->group(function () {
 #settings
 Route::name('settings.')->controller(SettingsController::class)->group(function () {
     Route::put('/settings', 'update')->name('update');
+    Route::put('/mail/{mailer}', 'saveMailSettings')->name('mail');
 });
 #settings
+
+
+#promos
+Route::name('promos.')->controller(PromosController::class)->group(function () {
+    Route::get('/promos', 'index')->name('index');
+    Route::get('/promos/create', 'create')->name('create');
+    Route::post('/promos/store', 'store')->name('store');
+    Route::get('/promos/{promo}/edit', 'edit')->name('edit');
+    Route::put('/promos/{promo}', 'update')->name('update');
+    Route::put('/promos/toggle/{promo}', 'toggle')->name('toggle');
+    Route::delete('/promos/{promo}', 'destroy')->name('destroy');
+});
+#promos

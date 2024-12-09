@@ -7,12 +7,14 @@ use App\Models\Holder;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 use Exception;
 
 class TokenHolderService
 {
     protected $apiKey;
     protected $baseUrl = 'https://rpc.ankr.com/multichain';
+    protected const CHUNK_SIZE = 1000; // Number of records to process at once
 
     public function __construct()
     {
@@ -26,9 +28,9 @@ class TokenHolderService
     {
         try {
             $launchpads = Launchpad::query()
-                // ->whereNull('pool')
                 ->whereNotNull('token')
                 ->get();
+
             foreach ($launchpads as $launchpad) {
                 $this->updateHolders($launchpad);
             }
@@ -38,7 +40,7 @@ class TokenHolderService
     }
 
     /**
-     * Update holders for a specific launchpad
+     * Update holders for a specific launchpad using bulk upsert
      */
     public function updateHolders(Launchpad $launchpad)
     {
@@ -49,19 +51,40 @@ class TokenHolderService
                 Log::error("Invalid response for token {$launchpad->token}");
                 return;
             }
+
+            // Get all user addresses and IDs once
             $users = User::query()->pluck('id', 'address');
-            foreach ($response['holders'] as $holder) {
-                Holder::updateOrCreate(
-                    [
-                        'launchpad_id' => $launchpad->id,
-                        'address' => $holder['holderAddress']
-                    ],
-                    [
-                        'qty' => $holder['balance'],
-                        'user_id' => $users[$holder['holderAddress']] ?? $users[Util::toChecksumAddress($holder['holderAddress'])] ?? null
-                    ]
+            $checksumAddresses = $users->keys()->mapWithKeys(function ($address) use ($users) {
+                return [Util::toChecksumAddress($address) => $users[$address]];
+            });
+            $userAddresses = $users->union($checksumAddresses);
+
+            // Prepare holder records for bulk upsert
+            $holders = collect($response['holders'])->map(function ($holder) use ($launchpad, $userAddresses) {
+                return [
+                    'launchpad_id' => $launchpad->id,
+                    'address' => $holder['holderAddress'],
+                    'qty' => $holder['balance'],
+                    'user_id' => $userAddresses[$holder['holderAddress']] ?? null,
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ];
+            });
+
+            // Process in chunks to avoid memory issues
+            $holders->chunk(self::CHUNK_SIZE)->each(function ($chunk) {
+                Holder::upsert(
+                    $chunk->toArray(),
+                    ['launchpad_id', 'address'], // Unique keys for matching
+                    ['qty', 'user_id', 'updated_at'] // Columns to update if record exists
                 );
-            }
+            });
+
+            // Clean up old holders that no longer exist
+            $currentHolderAddresses = collect($response['holders'])->pluck('holderAddress')->toArray();
+            Holder::where('launchpad_id', $launchpad->id)
+                ->whereNotIn('address', $currentHolderAddresses)
+                ->delete();
         } catch (Exception $e) {
             Log::error("Failed to update holders for launchpad {$launchpad->id}: " . $e->getMessage());
         }
@@ -72,7 +95,6 @@ class TokenHolderService
      */
     protected function fetchHolders(string $tokenAddress, string $chainId, int $page = 1): array
     {
-
         $response = Http::post($this->baseUrl . '/' . $this->apiKey, [
             'jsonrpc' => '2.0',
             'method' => 'ankr_getTokenHolders',
@@ -84,6 +106,7 @@ class TokenHolderService
             ],
             'id' => 1
         ]);
+
         if ($response->failed()) {
             throw new Exception('Ankr API request failed: ' . $response->body());
         }
@@ -121,14 +144,5 @@ class TokenHolderService
             '660279' => 'xai',
             default => throw new Exception("Unsupported chainId: {$chainId}")
         };
-    }
-
-    /**
-     * Find user ID by address
-     */
-    protected function findUserId(string $address): ?int
-    {
-        $user = \App\Models\User::where('address', $address)->first();
-        return $user?->id;
     }
 }

@@ -1,15 +1,23 @@
 <script setup>
-import ConfirmationModal from "@/Components/ConfirmationModal.vue";
-import Loading from "@/Components/Loading.vue";
-import Pagination from "@/Components/Pagination.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import SearchInput from "@/Components/SearchInput.vue";
-import VueIcon from "@/Components/VueIcon.vue";
-import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head, Link, router, useForm } from "@inertiajs/vue3";
-import { debouncedWatch, useUrlSearchParams } from "@vueuse/core";
-import { HiPencil, HiTrash } from "oh-vue-icons/icons";
-import { ref } from "vue";
+	import { ref } from "vue";
+
+	import { Head, Link, router, useForm } from "@inertiajs/vue3";
+	import { debouncedWatch, useUrlSearchParams } from "@vueuse/core";
+	import { Plus } from "lucide-vue-next";
+	import { HiPencil, HiTrash } from "oh-vue-icons/icons";
+
+	import BaseButton from "@/Components/BaseButton.vue";
+	import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+	import FormSwitch from "@/Components/FormSwitch.vue";
+	import Loading from "@/Components/Loading.vue";
+	import Pagination from "@/Components/Pagination.vue";
+	import PrimaryButton from "@/Components/PrimaryButton.vue";
+	import SearchInput from "@/Components/SearchInput.vue";
+	import VueIcon from "@/Components/VueIcon.vue";
+	import WeCopy from "@/Components/WeCopy.vue";
+	import AdminLayout from "@/Layouts/AdminLayout.vue";
+	import { truncateTx } from "@/lib/wagmi";
+
 	defineProps({
 		promos: Object,
 		title: { required: false, type: String },
@@ -74,18 +82,24 @@ import { ref } from "vue";
 						class="lg:flex items-center justify-between mb-4 gap-3">
 						<div class="mb-4 lg:mb-0">
 							<h3 class="h3">
-								{{ $t("Manage Promos") }}
+								{{ $t("Manage Image Promotions") }}
 							</h3>
-							<p>{{ $t("Available Promos") }}</p>
+							<p>
+								{{
+									$t(
+										"Image promos are rotated on the landing page",
+									)
+								}}
+							</p>
 						</div>
 						<div
 							class="flex flex-col lg:flex-row lg:items-center gap-3">
 							<PrimaryButton
-                                secondary
-                                link
-								:href="route('admin.promos.create')"
-							>
-								{{ $t("Create New Promos") }}
+								secondary
+								link
+								:href="route('admin.promos.create')">
+								<Plus class="w-4 h-4 mr-1 -ml-1 inline-flex" />
+								{{ $t("Create New Promo") }}
 							</PrimaryButton>
 						</div>
 					</div>
@@ -106,12 +120,32 @@ import { ref } from "vue";
 										role="table">
 										<thead>
 											<tr role="row">
-																					<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{$t('Name')}}</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{$t('Image')}}</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{$t('Url')}}</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{$t('Starts At')}}</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{$t('Ends At')}}</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{$t('Active')}}</th>
+												<th
+													scope="col"
+													class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													{{ $t("Name") }}
+												</th>
+
+												<th
+													scope="col"
+													class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													{{ $t("Url") }}
+												</th>
+												<th
+													scope="col"
+													class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													{{ $t("Starts At") }}
+												</th>
+												<th
+													scope="col"
+													class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													{{ $t("Ends At") }}
+												</th>
+												<th
+													scope="col"
+													class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+													{{ $t("Active") }}
+												</th>
 												<td role="columnheader"></td>
 											</tr>
 										</thead>
@@ -120,12 +154,52 @@ import { ref } from "vue";
 												v-for="promo in promos.data"
 												:key="promo.id"
 												role="row">
-																					<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" >{{ promo.name }}</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" >{{ promo.image }}</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" >{{ promo.url }}</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" >{{ promo.starts_at }}</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" >{{ promo.ends_at }}</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" >{{ promo.active }}</td>
+												<td
+													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-300">
+													<div
+														class="flex items-start gap-3">
+														<img
+															class="w-auto h-12 rounded border border-gray-700"
+															:src="
+																promo.image
+															" />
+														<div>
+															{{ promo.name }}
+														</div>
+													</div>
+												</td>
+
+												<td
+													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-300">
+													<WeCopy
+														:text="promo.url"
+														after>
+														{{
+															truncateTx(
+																promo.url,
+																16,
+															)
+														}}
+													</WeCopy>
+												</td>
+												<td
+													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-300">
+													{{ promo.starts_at }}
+												</td>
+												<td
+													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-300">
+													{{ promo.ends_at }}
+												</td>
+												<td
+													class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-300">
+													<FormSwitch
+														:model-value="
+															promo.active
+														"
+														@update:model-value="
+															toggle(promo)
+														" />
+												</td>
 												<td role="cell">
 													<div
 														class="flex justify-end text-lg">
@@ -185,39 +259,36 @@ import { ref } from "vue";
 					}}
 				</p>
 				<p>
-					{{
-						$t(
-							"Its Recommended to Disable the promo Instead",
-						)
-					}}
+					{{ $t("Its Recommended to Disable the promo Instead") }}
 				</p>
 			</template>
 
 			<template #footer>
-				<PrimaryButton
-					primary
+				<BaseButton
+					secondary
+					outlined
 					class="uppercase text-xs font-semibold"
 					@click="promoBeingDeleted = null">
 					{{ $t("Cancel") }}
-				</PrimaryButton>
+				</BaseButton>
 
-				<PrimaryButton
+				<BaseButton
 					secondary
 					class="ml-2 uppercase text-xs font-semibold"
 					v-if="promoBeingDeleted.active"
 					@click="toggle(promoBeingDeleted)">
 					<Loading v-if="promoBeingDeleted.busy" />
 					{{ $t("Disable") }}
-				</PrimaryButton>
+				</BaseButton>
 
-				<PrimaryButton
-					error
+				<BaseButton
+					danger
 					class="ml-2 uppercase text-xs font-semibold"
 					@click="deletePromo"
 					:class="{ 'opacity-25': deletePromoForm.processing }"
 					:disabled="deletePromoForm.processing">
 					{{ $t("Delete") }}
-				</PrimaryButton>
+				</BaseButton>
 			</template>
 		</ConfirmationModal>
 	</AdminLayout>

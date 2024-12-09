@@ -14,6 +14,7 @@ use App\Http\Resources\Trade;
 use App\Models\Factory;
 use App\Models\Launchpad;
 use App\Models\Poolstat;
+use App\Models\Promo;
 use App\Models\Rate;
 use App\Models\Trade as ModelsTrade;
 use Carbon\Carbon;
@@ -61,17 +62,39 @@ class LaunchpadsController extends Controller
             'top' => function () {
                 return $this->getTopLaunchpads();
             },
-            'ads' => collect(File::files(public_path('ads')))
-                ->filter(function ($file) {
-                    // Filter for image extensions
-                    return in_array($file->getExtension(), ['jpg', 'jpeg', 'png']);
+            'ads' => fn() => Promo::query()->inRandomOrder()->take(3)->get(),
+            'initialTrades' => fn() => ModelsTrade::query()
+                ->with('launchpad')
+                ->latest()
+                ->take(3)
+                ->get()
+                ->map(function (ModelsTrade $trade) {
+                    return [
+                        'id' => $trade->id,
+                        'launchpad_id' => $trade->launchpad_id,
+                        'txid' => $trade->txid,
+                        'qty' => $trade->qty,
+                        'usd' => $trade->usd,
+                        'amount' => $trade->amount,
+                        'address' => $trade->address,
+                        'type' => $trade->type,
+                        'price' => bcdiv($trade->amount, $trade->qty, 18),
+                        'usd_price' => bcdiv($trade->usd, $trade->qty, 8),
+                        'created_at' => $trade->created_at,
+                        'date' => now()->gt($trade->created_at->addDays(7))
+                            ? $trade->created_at->toDateTimeString()
+                            : $trade->created_at->diffForHumans(),
+                        'price' => bcdiv($trade->amount, $trade->qty, 18),
+                        //launchpad
+                        'contract' => $trade->launchpad->contract,
+                        'token' => $trade->launchpad->token,
+                        'name' => $trade->launchpad->name,
+                        'symbol' => $trade->launchpad->symbol,
+                        'description' => $trade->launchpad->description,
+                        'chainId' => (int) $trade->launchpad->chainId,
+                        'logo' => $trade->launchpad->logo,
+                    ];
                 })
-                ->map(function ($file) {
-                    // Convert to public URL
-                    return asset('ads/' . $file->getFilename());
-                })
-                ->values()
-                ->all()
         ]);
     }
 

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\Uploads;
 use App\Enums\SettingRpc;
 use App\Http\Controllers\Controller;
+use App\Install\Helpers\EnvHelper;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\Rules\Enum;
 
 class SettingsController extends Controller
@@ -58,6 +60,54 @@ class SettingsController extends Controller
         $setting->chat = $request->chat;
         $setting->featured = $request->featured;
         $setting->save();
+        return back();
+    }
+
+
+    public function saveMailSettings(Request $request, $mailer)
+    {
+
+        $envHelper = new EnvHelper;
+        $validated = match ($mailer) {
+            'mailsend' => $request->validate([
+                'MAIL_MAILER' => 'required|string',
+                'MAIL_FROM_ADDRESS' => 'required|email',
+                'MAIL_FROM_NAME' => 'required|string',
+                'MAILERSEND_API_KEY' => 'required_if:MAIL_MAILER,mailersend|string',
+            ]),
+            'mailgun' => $request->validate([
+                'MAIL_MAILER' => 'required|string',
+                'MAIL_FROM_ADDRESS' => 'required|email',
+                'MAIL_FROM_NAME' => 'required|string',
+                'MAILGUN_SECRET' => 'required_if:MAIL_MAILER,mailgun|string',
+                'MAILGUN_DOMAIN' => 'required_if:MAIL_MAILER,mailgun|string',
+                'MAILGUN_ENDPOINT' => 'required_if:MAIL_MAILER,mailgun|string',
+            ]),
+            'postmark' => $request->validate([
+                'MAIL_MAILER' => 'required|string',
+                'MAIL_FROM_ADDRESS' => 'required|email',
+                'MAIL_FROM_NAME' => 'required|string',
+                'POSTMARK_TOKEN' => 'required_if:MAIL_MAILER,postmark|string',
+            ]),
+            'resend' => $request->validate([
+                'MAIL_MAILER' => 'required|string',
+                'MAIL_FROM_ADDRESS' => 'required|email',
+                'MAIL_FROM_NAME' => 'required|string',
+                'RESEND_KEY' => 'required_if:MAIL_MAILER,resend|string',
+            ]),
+            'smtp' => $request->validate([
+                'MAIL_MAILER' => 'required|string',
+                'MAIL_FROM_ADDRESS' => 'required|email',
+                'MAIL_FROM_NAME' => 'required|string',
+                'MAIL_HOST' => 'required_if:MAIL_MAILER,smtp|string',
+                'MAIL_PORT' => 'required_if:MAIL_MAILER,smtp|string',
+                'MAIL_ENCRYPTION' => 'nullable|string',
+                'MAIL_USERNAME' => 'nullable|string',
+                'MAIL_PASSWORD' => 'nullable|string',
+            ]),
+        };
+        $envHelper->updateMultipleEnv($validated);
+        Artisan::call('config:clear');
         return back();
     }
 }

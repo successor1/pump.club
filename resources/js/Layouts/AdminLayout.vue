@@ -8,6 +8,7 @@
 		LayoutPanelLeft,
 		MessageSquareCode,
 		Pickaxe,
+		Tv2,
 		Users,
 		Zap,
 	} from "lucide-vue-next";
@@ -105,6 +106,12 @@
 			icon: MessageSquareCode,
 			route: "admin.msgs.index",
 			active: "admin.msgs.*",
+		},
+		{
+			name: "Promos",
+			icon: Tv2,
+			route: "admin.promos.index",
+			active: "admin.promos.*",
 		},
 	];
 </script>

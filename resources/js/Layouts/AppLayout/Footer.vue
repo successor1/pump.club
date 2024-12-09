@@ -19,7 +19,7 @@
 						</Link>
 
 						<p class="text-sm font-semibold">
-							Great memes for great fun.
+							{{ $t("Great memes for great fun.") }}
 						</p>
 					</div>
 					<!-- Explore Column -->
@@ -27,31 +27,31 @@
 						<ul class="space-y-4">
 							<li>
 								<Link
-									href="/my-tokens"
+									href="/"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									Explore
+									{{ $t("Explore") }}
 								</Link>
 							</li>
 							<li>
 								<Link
-									href="/my-tokens"
+									href="/mine"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									My Tokens
+									{{ $t("My Memes") }}
 								</Link>
 							</li>
 							<li>
-								<Link
-									href="/rewards"
+								<aside
+									href="#"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									Rewards
-								</Link>
+									{{ $t("Rewards") }}
+								</aside>
 							</li>
 							<li>
-								<Link
-									href="/contributed"
+								<a
+									href="#"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									Contributions
-								</Link>
+									{{ $t("Contributions") }}
+								</a>
 							</li>
 						</ul>
 					</div>
@@ -60,23 +60,23 @@
 						<ul class="space-y-4">
 							<li>
 								<Link
-									href="/documentation"
+									href="/privacy"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									Policy
+									{{ $t("Policy") }}
 								</Link>
 							</li>
 							<li>
 								<Link
-									href="/documentation"
+									href="/terms"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									Terms
+									{{ $t("Terms") }}
 								</Link>
 							</li>
 							<li>
 								<Link
-									href="/how-it-works"
+									href="#"
 									class="text-sm font-semibold hover:text-primary transition-colors">
-									How it works
+									{{ $t("How it works") }}
 								</Link>
 							</li>
 							<li v-if="$page.props.links.documentation">
@@ -84,7 +84,7 @@
 									:href="$page.props.links.documentation"
 									class="inline-flex items-center space-x-2 text-sm font-semibold hover:text-primary transition-colors">
 									<BookOpenCheckIcon class="w-5 h-5" />
-									<span>Docs</span>
+									<span>{{ $t("Docs") }}</span>
 								</a>
 							</li>
 						</ul>
@@ -97,7 +97,7 @@
 									:href="$page.props.links.twitter"
 									class="inline-flex items-center space-x-2 text-sm font-semibold hover:text-primary transition-colors">
 									<XIcon class="w-4 h-4" />
-									<span>Twitter</span>
+									<span>{{ $t("Twitter") }}</span>
 								</a>
 							</li>
 							<li v-if="$page.props.links.tgGroup">
@@ -106,7 +106,7 @@
 									class="inline-flex items-center space-x-2 text-sm font-semibold hover:text-primary transition-colors">
 									<LucideSend class="w-5 h-5" />
 
-									<span>Telegram</span>
+									<span>{{ $t("Telegram") }}</span>
 								</a>
 							</li>
 
@@ -130,7 +130,7 @@
 					</div>
 					<div class="space-y-4">
 						<h3 class="text-white font-medium">
-							Subscribe to notifications:
+							{{ $t("Subscribe to notifications:") }}
 						</h3>
 						<!-- Social Links -->
 
@@ -143,7 +143,7 @@
 								<path
 									d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.93 1.23-5.46 3.62-.52.36-.99.53-1.41.52-.46-.01-1.35-.26-2.01-.47-.81-.26-1.45-.4-1.4-.85.03-.22.46-.45 1.3-.68 5.09-2.22 8.49-3.68 10.19-4.4.73-.3 1.81-.76 2.21-.77.13 0 .41.03.6.19.17.14.22.34.25.49.02.12.03.77-.03 1.21z" />
 							</svg>
-							Telegram bot
+							{{ $t("Telegram bot") }}
 						</PrimaryButton>
 					</div>
 				</div>

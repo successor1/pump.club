@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schedule;
 
 //schedule
 Schedule::command(UpdatePoolStats::class)->everyTenMinutes();
-Schedule::command(UpdateTokenHolders::class)->hourly();
+Schedule::command(UpdateTokenHolders::class)->everyTenMinutes();
 Schedule::command(UpdateTradeCandles::class, ['--days=1'])->hourly();
 Schedule::command(UpdateTradeCandles::class, ['--days=30'])->daily();
 //commands

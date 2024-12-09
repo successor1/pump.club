@@ -22,8 +22,10 @@ class User extends JsonResource
             'email' => $this->email,
             'address' => $this->address,
             'email_verified_at' => $this->email_verified_at,
+            'verified' => !!$this->email_verified_at,
             'canVerify' => !$this->email_verified_at,
             'joined' => $this->created_at->toDateTimeString(),
+            'joinedAgo' => $this->created_at->diffForHumans(),
             'active' => $this->active,
             'banned' => $this->banned,
             //.git/

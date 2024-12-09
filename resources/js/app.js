@@ -11,9 +11,11 @@ import { WagmiPlugin } from '@wagmi/vue';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
+import "v-calendar/dist/style.css";
 import { createI18n } from "vue-i18n";
 import VueTippy from "vue-tippy";
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import "../css/vcalendar-theme.css";
 import messages from "./vue-i18n-locales.generated.js";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -33,7 +35,7 @@ createInertiaApp({
             legacy: false,
         });
         const adapter = useWagmiAdapter(props.initialPage.props);
-        return createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
             .use(WagmiPlugin, { config: adapter.wagmiConfig })
@@ -41,6 +43,7 @@ createInertiaApp({
             .use(i18n)
             .use(VueTippy)
             .mount(el);
+        return app;
     },
     progress: {
         color: '#f5f5f3',
