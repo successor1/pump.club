@@ -16,7 +16,7 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && $request->user()?->isAdmin())
+        if (Auth::check() && (config('app.demo', false) || $request->user()?->isAdmin()))
             return $next($request);
         return redirect('/');
     }
