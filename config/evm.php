@@ -167,5 +167,20 @@ return [
         'positionManager' => "0xec12a9F9a09f50550686363766Cc153D03c27b5e",
         'weth' => "0x4200000000000000000000000000000000000006",
         'feeTo' => null,
+    ],
+    //sushiswap linea
+    'linea' => [
+        'chainId' => 59144,
+        'symbol' => 'ETH',
+        'virtualEth' => 2,
+        'preBondingTarget' => 2,
+        'bondingTarget' => 8,
+        'minContribution' => 0.01,
+        'poolFee' => 3000, // 0.3%
+        'sellFee' => 100,
+        'uniswapV3Factory' => "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        'positionManager' => "0x80C7DD17B01855a6D2347444a0FCC36136a314de",
+        'weth' => "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
+        'feeTo' => null,
     ]
 ];
