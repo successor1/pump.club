@@ -11,6 +11,7 @@
 	} from "@wagmi/vue";
 	import axios from "axios";
 	import { Power } from "lucide-vue-next";
+	import { blast, linea, sepolia } from "viem/chains";
 
 	import DangerButton from "@/Components/DangerButton.vue";
 	import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -37,6 +38,11 @@
 		themeVariables: {
 			"--w3m-color-mix": "#404040",
 			"--w3m-color-mix-strength": 40,
+		},
+		chainImages: {
+			[sepolia.id]: "https://cdn.scriptoshi.com/evm/ethereum.svg",
+			[linea.id]: "https://cdn.scriptoshi.com/evm/linea.svg",
+			[blast.id]: "https://cdn.scriptoshi.com/evm/blast.svg",
 		},
 	});
 	defineProps({

@@ -38,6 +38,8 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $setting = Setting::find(1);
+        $isAdminRoute = str_starts_with(request()->route()?->getName() ?? '', 'admin.') ||
+            str_starts_with(request()->path(), 'admin/');
         return [
             ...parent::share($request),
             'auth' => [
@@ -87,9 +89,17 @@ class HandleInertiaRequests extends Middleware
             'evm' => collect(config('evm'))->values()->reject(function ($evm) {
                 return !is_array($evm) || !isset($evm['chainId']) || !isset($evm['symbol']);
             })->keyBy('chainId'),
-            'activeChains' => function () {
-                return Factory::query()->pluck('chainId')->values()->unique()->all();
+            'activeChains' => function () use ($isAdminRoute) {
+                if ($isAdminRoute) {
+                    return Cache::remember('chainids', 60, function () {
+                        $foundry = json_decode(File::get(base_path('evm/Foundry.json')), true);
+                        return array_keys($foundry['addresses']);
+                    });
+                }
+                $chains = Factory::query()->pluck('chainId')->values()->unique()->all();
+                return [...$chains, 11155111]; // always return sepolia
             },
+            'isAdminRoute' => $isAdminRoute,
             'usdRates' =>  function () {
                 return Rate::query()->pluck('usd_rate', 'chainId')->all();
             },

@@ -19,10 +19,13 @@ use App\Models\Rate;
 use App\Models\Trade as ModelsTrade;
 use Carbon\Carbon;
 use Gate;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
+
+use function Clue\StreamFilter\fun;
 
 class LaunchpadsController extends Controller
 {
@@ -62,7 +65,15 @@ class LaunchpadsController extends Controller
             'top' => function () {
                 return $this->getTopLaunchpads();
             },
-            'ads' => fn() => Promo::query()->inRandomOrder()->take(3)->get(),
+            'ads' => fn() => Promo::query()
+                ->where('active', true)
+                ->when(!config('app.demo', false), function (Builder $query) {
+                    $query->where('start_date', '<=', now())
+                        ->where('end_date', '>=', now());
+                })
+                ->inRandomOrder()
+                ->take(3)
+                ->get(),
             'initialTrades' => fn() => ModelsTrade::query()
                 ->with('launchpad')
                 ->latest()

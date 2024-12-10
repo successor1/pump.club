@@ -51,11 +51,10 @@ import {
     zksyncSepoliaTestnet,
 } from '@reown/appkit/networks';
 import { http } from '@wagmi/vue';
-export const networks = [arbitrum, bsc, sepolia];
+export const networks = [arbitrum, bsc, sepolia, linea, base, blast];
 export const projectId = import.meta.env.VITE_PROJECT_ID;
 export const projectUrl = import.meta.env.VITE_PROJECT_URL;
 export const projectName = import.meta.env.VITE_PROJECT_APP_NAME;
-
 export const ankrTransports = (ANKR_KEY) => ({
     // Ethereum and testnets
     [mainnet.id]: `https://rpc.ankr.com/eth/${ANKR_KEY}`,
@@ -247,13 +246,15 @@ export const useWagmiAdapter = ({
     ankr = null, // ankrApiKey
     infura, // infuraApiKey
     blast, // blastApiKey
-    chainIds = [56] // supported chainIds
+    chainIds = [56], // supported chainIds
+    activeChains = [],
 }) => {
     console.log(rpc, // default RPC provider: 'ankr', 'infura', or 'blast'
         ankr, // ankrApiKey
         infura, // infuraApiKey
         blast, // blastApiKey
-        chainIds);
+        chainIds,
+        activeChains);
     // Initialize transport configurations based on provided API keys
     const transportConfigs = {
         ankr: ankrTransports(ankr ?? ''),
@@ -261,7 +262,7 @@ export const useWagmiAdapter = ({
         blast: blast ? blastapiTransports(blast) : {}
     };
     // Create transports object for WagmiAdapter
-    const transports = chainIds.reduce((acc, chainId) => {
+    const transports = activeChains.reduce((acc, chainId) => {
         // Skip if the chain isn't supported by the selected provider
         const url = transportConfigs[rpc][chainId] ?? transportConfigs.ankr[chainId] ?? transportConfigs.infura[chainId] ?? transportConfigs.blast[chainId];
         if (!url) {
@@ -277,10 +278,10 @@ export const useWagmiAdapter = ({
     console.log(`Transports`, transports);
     // Create and return the WagmiAdapter instance
     return new WagmiAdapter({
-        networks: networks.filter(n => chainIds.includes(n.id)),
+        networks: networks.filter(n => activeChains.includes(n.id)),
         multiInjectedProviderDiscovery: true,
         autoConnect: true,
-        transports
+        transports,
     });
 };
 
