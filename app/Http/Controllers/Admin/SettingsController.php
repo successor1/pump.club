@@ -26,7 +26,7 @@ class SettingsController extends Controller
         $request->validate([
             'logo_uri' => ['nullable', 'required_if:logo_upload,true', 'string'],
             'logo_upload' => ['required', 'boolean'],
-            'logo_path' => ['nullable', 'array', 'required_if:logo_upload,true'],
+            'logo_path' => ['nullable', 'required_if:logo_upload,true'],
             'name' => ['required', 'string'],
             'twitter' => ['nullable', 'string', 'url'],
             'youtube' => ['nullable', 'string', 'url'],

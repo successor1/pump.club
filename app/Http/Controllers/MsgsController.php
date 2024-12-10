@@ -34,8 +34,9 @@ class MsgsController extends Controller
         $validated = $request->validate([
             'launchpad_id' => 'required|exists:launchpads,id',
             'message' => 'required_without:image_path|string|max:300',
-            'image_path' => 'nullable|array',
-            'image_upload' => 'required|boolean'
+            'image_path' => 'nullable',
+            'image_upload' => 'required|boolean',
+            'image_uri' => ['nullable', 'required_if:image_upload,true', 'string'],
         ]);
         $msg = new Msg();
         $msg->user_id = $request->user()->id;

@@ -119,6 +119,7 @@
 												v-model="form.image_uri"
 												v-model:file="form.image_path"
 												:key="refreshId"
+												class="min-h-[200px]"
 												auto />
 											<FileUploaderLocal
 												v-else

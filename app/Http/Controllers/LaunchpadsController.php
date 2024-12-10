@@ -131,7 +131,7 @@ class LaunchpadsController extends Controller
             'website' => ['string', 'nullable'],
             'logo_uri' => ['nullable', 'required_if:logo_upload,false', 'string'],
             'logo_upload' => ['required', 'boolean'],
-            'logo_path' => ['nullable', 'array', 'required_if:logo_upload,true'],
+            'logo_path' => ['nullable', 'required_if:logo_upload,true'],
         ]);
         $launchpad = new Launchpad;
         $launchpad->user_id = $request->user()->id;
@@ -445,7 +445,7 @@ class LaunchpadsController extends Controller
             'logo' => ['string', 'required'],
             'logo_uri' => ['required', 'string'],
             'logo_upload' => ['required', 'boolean'],
-            'logo_path' => ['nullable', 'string', 'required_if:logo_upload,true'],
+            'logo_path' => ['nullable',  'required_if:logo_upload,true'],
             'featured' => ['nullable', 'boolean'],
             'kingofthehill' => ['nullable', 'boolean'],
             'active' => ['nullable', 'boolean'],

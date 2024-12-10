@@ -61,7 +61,7 @@ class InstallController extends Controller
             'DB_PASSWORD' => $this->envHelper->getEnv('DB_PASSWORD'),
         ];
         return Inertia::render('Install/Steps/Environment', [
-            'installed' => Storage::exists('installed'),
+            'installed' => Storage::disk('public')->exists('installed'),
             'current' => $currentEnv
         ]);
     }

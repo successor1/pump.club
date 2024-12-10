@@ -34,7 +34,7 @@ class InstallMiddleware
      */
     protected function isInstalled(): bool
     {
-        return Storage::exists('installed');
+        return Storage::disk('public')->exists('installed');
     }
 
     /**
