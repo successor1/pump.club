@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Notifications\OTPNotification;
 use Illuminate\Http\Request;
 use App\Services\UrlCrypt;
+use Illuminate\Validation\ValidationException;
 use RateLimiter;
 
 class OtpController extends Controller
@@ -41,7 +42,7 @@ class OtpController extends Controller
         $request->validate(['otp' => 'required|string']);
         $user = $request->user();
         if (!$user->verifyOTP($request->otp)) {
-            return response()->json(['message' => 'Invalid OTP'], 422);
+            throw ValidationException::withMessages(['otp' => ['Invalid OTP']]);;
         }
         $user->update(['email_verified_at' => now()]);
         return back();

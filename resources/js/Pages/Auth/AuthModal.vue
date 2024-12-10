@@ -1,7 +1,7 @@
 <script setup>
 	import { computed, ref, watch } from "vue";
 
-	import { useForm, usePage } from "@inertiajs/vue3";
+	import { router, useForm, usePage } from "@inertiajs/vue3";
 	import { useInterval } from "@vueuse/core";
 	import { Mail, UserIcon } from "lucide-vue-next";
 
@@ -68,11 +68,13 @@
 	};
 	const authForm = useForm({ otp: "" });
 	const submitOTP = async () => {
+		console.log("hehehehhe");
 		authForm.post(window.route("modal.verify"), {
-			preserveState: false,
-			preserveScroll: false,
-			onFinish() {
+			preserveState: true,
+			preserveScroll: true,
+			onSuccess() {
 				emit("update:show", false);
+				router.reload();
 			},
 		});
 	};
@@ -95,6 +97,11 @@
 				<div v-if="error" class="text-red-500 mb-4">{{ error }}</div>
 				<div v-if="needsOtp">
 					<OtpInput v-model="authForm.otp" :length="6" />
+					<p
+						class="!text-red-500 text-sm mt-2"
+						v-if="authForm.errors.otp">
+						{{ authForm.errors.otp }}
+					</p>
 				</div>
 				<div v-else>
 					<FormInput
