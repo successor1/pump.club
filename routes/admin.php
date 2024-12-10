@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\MsgsController;
 use App\Http\Controllers\Admin\PromosController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TradesController;
-use App\Http\Controllers\Admin\UsersController;
+use App\Http\Middleware\DemoMode;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
@@ -29,20 +29,19 @@ Route::name('factories.')->controller(FactoriesController::class)->group(functio
     Route::get('/factories/{factory}/show', 'show')->name('show');
     Route::get('/factories/{factory}/edit', 'edit')->name('edit');
     Route::put('/factories/{factory}', 'update')->name('update');
-    Route::put('/factories/toggle/{factory}', 'toggle')->name('toggle');
-    Route::delete('/factories/{factory}', 'destroy')->name('destroy');
+    Route::put('/factories/toggle/{factory}', 'toggle')->middleware(DemoMode::class)->name('toggle');
+    Route::delete('/factories/{factory}', 'destroy')->middleware(DemoMode::class)->name('destroy');
 });
 #factories
-
 
 
 #launchpads
 Route::name('launchpads.')->controller(LaunchpadsController::class)->group(function () {
     Route::get('/launchpads', 'index')->name('index');
-    Route::put('/launchpads/toggle/{launchpad}', 'toggle')->name('toggle');
+    Route::put('/launchpads/toggle/{launchpad}', 'toggle')->middleware(DemoMode::class)->name('toggle');
     Route::put('/launchpads/kingofthehill/{launchpad}', 'kingofthehill')->name('kingofthehill');
     Route::put('/launchpads/featured/{launchpad}', 'featured')->name('featured');
-    Route::delete('/launchpads/{launchpad}', 'destroy')->name('destroy');
+    Route::delete('/launchpads/{launchpad}', 'destroy')->middleware(DemoMode::class)->name('destroy');
 });
 #launchpads
 
@@ -51,13 +50,6 @@ Route::name('launchpads.')->controller(LaunchpadsController::class)->group(funct
 #holders
 Route::name('holders.')->controller(HoldersController::class)->group(function () {
     Route::get('/holders', 'index')->name('index');
-    Route::get('/holders/create', 'create')->name('create');
-    Route::post('/holders/store', 'store')->name('store');
-    Route::get('/holders/{holder}/show', 'show')->name('show');
-    Route::get('/holders/{holder}/edit', 'edit')->name('edit');
-    Route::put('/holders/{holder}', 'update')->name('update');
-    Route::put('/holders/toggle/{holder}', 'toggle')->name('toggle');
-    Route::delete('/holders/{holder}', 'destroy')->name('destroy');
 });
 #holders
 
@@ -67,7 +59,7 @@ Route::name('holders.')->controller(HoldersController::class)->group(function ()
 Route::name('msgs.')->controller(MsgsController::class)->group(function () {
     Route::get('/msgs', 'index')->name('index');
     Route::put('/msgs/status/{msg}/{status}', 'status')->name('status');
-    Route::delete('/msgs/{msg}', 'destroy')->name('destroy');
+    Route::delete('/msgs/{msg}', 'destroy')->middleware(DemoMode::class)->name('destroy');
 });
 #msgs
 
@@ -76,19 +68,13 @@ Route::name('msgs.')->controller(MsgsController::class)->group(function () {
 #trades
 Route::name('trades.')->controller(TradesController::class)->group(function () {
     Route::get('/trades', 'index')->name('index');
-    Route::get('/trades/create', 'create')->name('create');
-    Route::post('/trades/store', 'store')->name('store');
-    Route::get('/trades/{trade}/show', 'show')->name('show');
-    Route::get('/trades/{trade}/edit', 'edit')->name('edit');
-    Route::put('/trades/{trade}', 'update')->name('update');
-    Route::put('/trades/toggle/{trade}', 'toggle')->name('toggle');
-    Route::delete('/trades/{trade}', 'destroy')->name('destroy');
+    Route::delete('/trades/{trade}', 'destroy')->middleware(DemoMode::class)->name('destroy');
 });
 #trades
 #settings
 Route::name('settings.')->controller(SettingsController::class)->group(function () {
-    Route::put('/settings', 'update')->name('update');
-    Route::put('/mail/{mailer}', 'saveMailSettings')->name('mail');
+    Route::put('/settings', 'update')->middleware(DemoMode::class)->name('update');
+    Route::put('/mail/{mailer}', 'saveMailSettings')->middleware(DemoMode::class)->name('mail');
 });
 #settings
 
@@ -97,10 +83,10 @@ Route::name('settings.')->controller(SettingsController::class)->group(function 
 Route::name('promos.')->controller(PromosController::class)->group(function () {
     Route::get('/promos', 'index')->name('index');
     Route::get('/promos/create', 'create')->name('create');
-    Route::post('/promos/store', 'store')->name('store');
+    Route::post('/promos/store', 'store')->middleware(DemoMode::class)->name('store');
     Route::get('/promos/{promo}/edit', 'edit')->name('edit');
-    Route::put('/promos/{promo}', 'update')->name('update');
-    Route::put('/promos/toggle/{promo}', 'toggle')->name('toggle');
-    Route::delete('/promos/{promo}', 'destroy')->name('destroy');
+    Route::put('/promos/{promo}', 'update')->middleware(DemoMode::class)->name('update');
+    Route::put('/promos/toggle/{promo}', 'toggle')->middleware(DemoMode::class)->name('toggle');
+    Route::delete('/promos/{promo}', 'destroy')->middleware(DemoMode::class)->name('destroy');
 });
 #promos

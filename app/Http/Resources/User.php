@@ -19,7 +19,7 @@ class User extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
+            'email' => config('app.demo') ? "** hidden in demo **" : $this->email,
             'address' => $this->address,
             'email_verified_at' => $this->email_verified_at,
             'verified' => !!$this->email_verified_at,
