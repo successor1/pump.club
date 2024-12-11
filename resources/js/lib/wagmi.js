@@ -246,14 +246,12 @@ export const useWagmiAdapter = ({
     ankr = null, // ankrApiKey
     infura, // infuraApiKey
     blast, // blastApiKey
-    chainIds = [56], // supported chainIds
     activeChains = [],
 }) => {
     console.log(rpc, // default RPC provider: 'ankr', 'infura', or 'blast'
         ankr, // ankrApiKey
         infura, // infuraApiKey
         blast, // blastApiKey
-        chainIds,
         activeChains);
     // Initialize transport configurations based on provided API keys
     const transportConfigs = {

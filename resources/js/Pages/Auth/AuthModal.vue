@@ -35,8 +35,8 @@
 
 	const needsOtp = computed(
 		() =>
-			!!usePage().props.auth.user.email &&
-			!usePage().props.auth.user.email_verified_at,
+			!!usePage().props.auth.user?.email &&
+			!usePage().props.auth.user?.email_verified_at,
 	);
 	const error = ref("");
 	const loading = ref(false);

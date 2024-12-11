@@ -27,7 +27,9 @@
 
 	createAppKit({
 		adapters: [wagmiAdapter],
-		networks,
+		networks: networks.filter((n) =>
+			usePage().props.activeChains.includes(n.id),
+		),
 		projectId,
 		metadata: {
 			name: projectName,
