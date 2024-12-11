@@ -55,7 +55,7 @@ class TokenHolderService
             // Get all user addresses and IDs once
             $users = User::query()->pluck('id', 'address');
             $checksumAddresses = $users->keys()->mapWithKeys(function ($address) use ($users) {
-                return [Util::toChecksumAddress($address) => $users[$address]];
+                return [strtolower($address) => $users[$address]];
             });
             $userAddresses = $users->union($checksumAddresses);
 
@@ -63,7 +63,7 @@ class TokenHolderService
             $holders = collect($response['holders'])->map(function ($holder) use ($launchpad, $userAddresses) {
                 return [
                     'launchpad_id' => $launchpad->id,
-                    'address' => $holder['holderAddress'],
+                    'address' => strtolower($holder['holderAddress']),
                     'qty' => $holder['balance'],
                     'user_id' => $userAddresses[$holder['holderAddress']] ?? null,
                     'updated_at' => now(),
