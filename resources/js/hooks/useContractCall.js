@@ -420,7 +420,8 @@ export const useLockInfo = (launchpad) => {
             info.positionManager = isAddress(getBondingCurveSettings.result.positionManager);
             info.weth = isAddress(getBondingCurveSettings.result.weth);
         }
-        await info.updateCheckFees();
+        if (info.isFinalized)
+            await info.updateCheckFees();
     };
     /**
      * use simulation

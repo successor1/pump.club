@@ -1,7 +1,7 @@
 <script setup>
 	import { computed, ref, watch } from "vue";
 
-	import { router, useForm, usePage } from "@inertiajs/vue3";
+	import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 	import { useInterval } from "@vueuse/core";
 	import { Mail, UserIcon } from "lucide-vue-next";
 

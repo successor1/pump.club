@@ -58,8 +58,8 @@
 				"mainSeriesProperties.candleStyle.wickDownColor": "#ef5350",
 			},
 			datafeed: {
-				onReady: (callback) => {
-					callback({
+				onReady: async (callback) => {
+					await callback({
 						supported_resolutions: [
 							"1",
 							"5",
@@ -89,12 +89,12 @@
 					]);
 				},
 
-				resolveSymbol: (
+				resolveSymbol: async (
 					symbolName,
 					onSymbolResolvedCallback,
 					onResolveErrorCallback,
 				) => {
-					onSymbolResolvedCallback({
+					await onSymbolResolvedCallback({
 						name: props.launchpad.symbol,
 						full_name: props.launchpad.symbol,
 						description: props.launchpad.symbol,
