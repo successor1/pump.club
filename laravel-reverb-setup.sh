@@ -14,13 +14,9 @@ if [ ! -f "./.env" ]; then
     exit 1
 fi
 
-# Get absolute path of artisan and project directory
+# Get absolute path of artisan
 ARTISAN_PATH=$(readlink -f ./artisan)
-PROJECT_DIR=$(basename $(pwd))
-# Sanitize project directory name for use in filenames
-SAFE_PROJECT_NAME=$(echo "$PROJECT_DIR" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g')
 echo "✓ Found artisan at: ${ARTISAN_PATH}"
-echo "✓ Project directory: ${PROJECT_DIR}"
 
 # Function to check if command was successful
 check_status() {
@@ -81,6 +77,49 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Enable required Apache modules
+echo "Enabling required Apache modules..."
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_balancer
+sudo a2enmod proxy_wstunnel
+sudo a2enmod rewrite
+sudo a2enmod lbmethod_byrequests
+check_status "Apache modules enabled"
+
+# Create Reverb proxy configuration
+REVERB_CONF="/etc/apache2/conf-available/reverb-proxy.conf"
+echo "Creating Reverb proxy configuration..."
+cat > "$REVERB_CONF" << 'EOF'
+<IfModule mod_proxy.c>
+    <IfModule mod_proxy_wstunnel.c>
+        RewriteEngine On
+        RewriteCond %{HTTP:Upgrade} =websocket [NC]
+        RewriteCond %{HTTP:Connection} upgrade$ [NC]
+        RewriteRule ^/app(.*)$ ws://127.0.0.1:8080/app$1 [P,L]
+
+        ProxyPass /app ws://127.0.0.1:8080/app
+        ProxyPassReverse /app ws://127.0.0.1:8080/app
+    </IfModule>
+
+    RewriteCond %{REQUEST_URI} ^/app [NC]
+    RewriteRule ^/app(.*)$ http://127.0.0.1:8080/app$1 [P,L]
+
+    ProxyPass /app http://127.0.0.1:8080/app
+    ProxyPassReverse /app http://127.0.0.1:8080/app
+</IfModule>
+EOF
+check_status "Reverb proxy configuration created"
+
+# Enable the configuration
+sudo a2enconf reverb-proxy
+check_status "Reverb proxy configuration enabled"
+
+# Restart Apache
+echo "Restarting Apache..."
+sudo systemctl restart apache2
+check_status "Apache restarted"
+
 # Update package list
 echo "Updating package list..."
 apt-get update
@@ -119,26 +158,9 @@ files = /etc/supervisor/conf.d/*.conf
 EOF
 check_status "Main supervisor configuration updated with minfds"
 
-# Create Laravel Queue Worker configuration with unique name
-cat > "/etc/supervisor/conf.d/laravel-queue-${SAFE_PROJECT_NAME}.conf" << EOF
-[program:laravel-queue-${SAFE_PROJECT_NAME}]
-process_name=%(program_name)s_%(process_num)02d
-command=php ${ARTISAN_PATH} queue:work --sleep=3 --tries=3 --max-time=3600
-autostart=true
-autorestart=true
-stopasgroup=true
-killasgroup=true
-user=www-data
-numprocs=2
-redirect_stderr=true
-stdout_logfile=/var/log/supervisor/laravel-queue-${SAFE_PROJECT_NAME}.log
-stopwaitsecs=3600
-EOF
-check_status "Queue worker configuration created"
-
-# Create Laravel Websocket Worker configuration with unique name
-cat > "/etc/supervisor/conf.d/laravel-websocket-${SAFE_PROJECT_NAME}.conf" << EOF
-[program:laravel-websocket-${SAFE_PROJECT_NAME}]
+# Create Laravel Websocket Worker configuration
+cat > /etc/supervisor/conf.d/laravel-reverb.conf << EOF
+[program:laravel-reverb]
 process_name=%(program_name)s_%(process_num)02d
 command=php ${ARTISAN_PATH} reverb:start
 autostart=true
@@ -148,7 +170,7 @@ killasgroup=true
 user=www-data
 numprocs=1
 redirect_stderr=true
-stdout_logfile=/var/log/supervisor/laravel-websocket-${SAFE_PROJECT_NAME}.log
+stdout_logfile=/var/log/supervisor/laravel-reverb.log
 stopwaitsecs=3600
 EOF
 check_status "Websocket worker configuration created"
@@ -166,9 +188,8 @@ supervisorctl reread
 supervisorctl update
 check_status "Supervisor configuration reloaded"
 
-# Start the processes with unique names
-supervisorctl start "laravel-queue-${SAFE_PROJECT_NAME}:*"
-supervisorctl start "laravel-websocket-${SAFE_PROJECT_NAME}:*"
+# Start the processes
+supervisorctl start laravel-reverb:*
 check_status "Processes started"
 
 # Show status
@@ -178,8 +199,8 @@ supervisorctl status
 echo -e "\nSetup completed successfully!"
 echo "You can monitor the processes using 'supervisorctl status'"
 echo "Logs are available at:"
-echo "- Queue Worker: /var/log/supervisor/laravel-queue-${SAFE_PROJECT_NAME}.log"
-echo "- Websocket: /var/log/supervisor/laravel-websocket-${SAFE_PROJECT_NAME}.log"
+echo "- Websocket: /var/log/supervisor/laravel-reverb.log"
 echo "- Supervisor: /var/log/supervisor/supervisord.log"
 echo -e "\nIMPORTANT: New Reverb credentials have been generated and saved to .env"
 echo "A backup of your original .env has been created"
+echo "Apache Reverb proxy configuration has been set up at: $REVERB_CONF"
