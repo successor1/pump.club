@@ -14,9 +14,13 @@ if [ ! -f "./.env" ]; then
     exit 1
 fi
 
-# Get absolute path of artisan
+# Get absolute path of artisan and project directory
 ARTISAN_PATH=$(readlink -f ./artisan)
+PROJECT_DIR=$(basename $(pwd))
+# Sanitize project directory name for use in filenames
+SAFE_PROJECT_NAME=$(echo "$PROJECT_DIR" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g')
 echo "✓ Found artisan at: ${ARTISAN_PATH}"
+echo "✓ Project directory: ${PROJECT_DIR}"
 
 # Function to check if command was successful
 check_status() {
@@ -115,9 +119,9 @@ files = /etc/supervisor/conf.d/*.conf
 EOF
 check_status "Main supervisor configuration updated with minfds"
 
-# Create Laravel Queue Worker configuration
-cat > /etc/supervisor/conf.d/laravel-queue.conf << EOF
-[program:laravel-queue]
+# Create Laravel Queue Worker configuration with unique name
+cat > "/etc/supervisor/conf.d/laravel-queue-${SAFE_PROJECT_NAME}.conf" << EOF
+[program:laravel-queue-${SAFE_PROJECT_NAME}]
 process_name=%(program_name)s_%(process_num)02d
 command=php ${ARTISAN_PATH} queue:work --sleep=3 --tries=3 --max-time=3600
 autostart=true
@@ -127,14 +131,14 @@ killasgroup=true
 user=www-data
 numprocs=2
 redirect_stderr=true
-stdout_logfile=/var/log/supervisor/laravel-queue.log
+stdout_logfile=/var/log/supervisor/laravel-queue-${SAFE_PROJECT_NAME}.log
 stopwaitsecs=3600
 EOF
 check_status "Queue worker configuration created"
 
-# Create Laravel Websocket Worker configuration
-cat > /etc/supervisor/conf.d/laravel-websocket.conf << EOF
-[program:laravel-websocket]
+# Create Laravel Websocket Worker configuration with unique name
+cat > "/etc/supervisor/conf.d/laravel-websocket-${SAFE_PROJECT_NAME}.conf" << EOF
+[program:laravel-websocket-${SAFE_PROJECT_NAME}]
 process_name=%(program_name)s_%(process_num)02d
 command=php ${ARTISAN_PATH} reverb:start
 autostart=true
@@ -144,7 +148,7 @@ killasgroup=true
 user=www-data
 numprocs=1
 redirect_stderr=true
-stdout_logfile=/var/log/supervisor/laravel-websocket.log
+stdout_logfile=/var/log/supervisor/laravel-websocket-${SAFE_PROJECT_NAME}.log
 stopwaitsecs=3600
 EOF
 check_status "Websocket worker configuration created"
@@ -162,9 +166,9 @@ supervisorctl reread
 supervisorctl update
 check_status "Supervisor configuration reloaded"
 
-# Start the processes
-supervisorctl start laravel-queue:*
-supervisorctl start laravel-websocket:*
+# Start the processes with unique names
+supervisorctl start "laravel-queue-${SAFE_PROJECT_NAME}:*"
+supervisorctl start "laravel-websocket-${SAFE_PROJECT_NAME}:*"
 check_status "Processes started"
 
 # Show status
@@ -174,8 +178,8 @@ supervisorctl status
 echo -e "\nSetup completed successfully!"
 echo "You can monitor the processes using 'supervisorctl status'"
 echo "Logs are available at:"
-echo "- Queue Worker: /var/log/supervisor/laravel-queue.log"
-echo "- Websocket: /var/log/supervisor/laravel-websocket.log"
+echo "- Queue Worker: /var/log/supervisor/laravel-queue-${SAFE_PROJECT_NAME}.log"
+echo "- Websocket: /var/log/supervisor/laravel-websocket-${SAFE_PROJECT_NAME}.log"
 echo "- Supervisor: /var/log/supervisor/supervisord.log"
 echo -e "\nIMPORTANT: New Reverb credentials have been generated and saved to .env"
 echo "A backup of your original .env has been created"
