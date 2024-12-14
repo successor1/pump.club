@@ -4,6 +4,13 @@
 
 Memex is a sophisticated decentralized application (dApp) designed for creating, hosting and managing meme token launches on a bonding curve. A bonding curve allows for token trading even before the token reaches marketcap. Built for EVM-compatible chains, Memex leverages the automated market making (AMM) constant product algorithm and a secure prebonding mechanism to create a reliable and profitable platform for administrators, meme creators, and meme traders.
 
+![Memex Banner](https://cdn.scriptoshi.com/scriptoshi/banner.jpg)
+
+## Documentation (Admin setup / management)
+
+[View Online Documentation ](https://docs.memex.scriptoshi.com)
+[Fork / contribut to the docs](https://github.com/scriptoshi/memex-docs)
+
 ## Demo Access
 
 To fully test the demo, ensure you have a working web3 wallet. Any connected address can access admin.
