@@ -1,28 +1,15 @@
-# Memex Launchpad
+# Memex - Decentralized Meme Bonding Curve
 
-Memex is a sophisticated decentralized application (dApp) designed for creating and managing token launchpads on EVM-compatible blockchain networks. The platform leverages smart contracts to ensure secure, transparent, and efficient token launches while minimizing deployment costs through innovative clone factory patterns.
+**The #1 full featured meme tokens launchpad.**
 
-## Overview
+Memex is a sophisticated decentralized application (dApp) designed for creating, hosting and managing meme token launches on a bonding curve. A bonding curve allows for token trading even before the token reaches marketcap. Built for EVM-compatible chains, Memex leverages the automated market making (AMM) constant product algorithm and a secure prebonding mechanism to create a reliable and profitable platform for administrators, meme creators, and meme traders.
 
-Memex operates as a full-stack solution combining:
+## Demo Access
 
--   Laravel v11.31 backend
--   Vue.js 3.x frontend with Composition API
--   Smart contract infrastructure for EVM networks
--   Web3 authentication system
--   Inertia.js for seamless SPA experience
--   Real-time trading data visualization
+To fully test the demo, ensure you have a working web3 wallet. Any connected address can access admin.
 
-## Core Features
-
--   Automated launchpad creation and management
--   Multi-chain support for EVM-compatible networks
--   Gas-efficient contract deployment via clone factory pattern
--   Web3 wallet authentication
--   Real-time trading charts and statistics
--   Social features including messaging system
--   Token holder tracking and management
--   Comprehensive admin dashboard
+[![Frontend Demo](https://cdn.scriptoshi.com/envato/frontend-demo.jpg)](https://memex.scriptoshi.com)
+[![Admin Demo](https://cdn.scriptoshi.com/envato/admin-demo.jpg)](https://memex.scriptoshi.com/admin)
 
 ## Technical Architecture
 
@@ -41,18 +28,52 @@ Memex operates as a full-stack solution combining:
 -   Shadcn-vue components
 -   Trading view integration for charts
 
-### Blockchain Integration
+## Core Features
 
--   EVM-compatible smart contracts
--   Factory pattern implementation
--   Web3 authentication
--   Multi-chain support
+### Decentralized Architecture
+
+-   Fully decentralized system with smart contract-based operations
+-   AMM (Constant product Formula) bonding curve for optimal price discovery
+-   Innovative prebond mechanism ensuring project viability
+-   Automatic liquidity migration to major DEXes
+-   No code instant solidity contract deployments
+-   Automatic Contract source verification at etherscan
+
+### Security & Integration
+
+-   Support for Uniswap, Sushiswap, PancakeSwap, and UniswapV3-compatible platforms
+-   Automatic LP lock for 10 years with secure fee claiming for developers
+-   Web3 authentication eliminating password-related vulnerabilities
+-   Built-in launchpad chat system for community engagement
+
+## Revenue Streams for Platform Administrators
+
+### Multiple Income Sources
+
+-   Deploy fees collection - Charge users for launchpad creation with blockchain-based fee collection
+-   Trading fees collection - Earn from all sales during the bonding period
+-   Top Ads revenue - Monetize through premium advertisement placement
+-   Featured Launchpads (Coming soon) - Premium listing opportunities
+-   Video Streaming services (Coming soon) - Additional monetization channel
+
+## Supported Blockchain Networks
+
+Currently integrated networks:
+
+![Binance](https://cdn.scriptoshi.com/envato/binance.jpg)
+![Arbitrum](https://cdn.scriptoshi.com/envato/arbitrum.jpg)
+![Base](https://cdn.scriptoshi.com/envato/base.jpg)
+![Blast](https://cdn.scriptoshi.com/envato/blast.jpg)
+![Linea](https://cdn.scriptoshi.com/envato/linea.jpg)
+![Sepolia](https://cdn.scriptoshi.com/envato/sepolia.jpg)
+
+_More networks coming soon! Custom chain integration available upon request._
 
 ## Smart Contract Architecture
 
 ### Factory Pattern Implementation
 
-The system employs a factory pattern for contract deployment, which offers several advantages:
+The system employs a factory pattern for contract deployment, offering:
 
 1. **Gas Efficiency**: Utilizes clone proxies to reduce deployment costs by up to 60%
 2. **Centralized Management**: Factory serves as a hub for all contract deployments
@@ -66,16 +87,25 @@ Gas costs vary by network:
 -   Layer 1 networks (e.g., Ethereum): $8-12 USD
 -   Layer 2 networks (e.g., Base): $4-6 USD
 
-## Prerequisites
+## Technical Requirements
 
-Before deploying Memex, ensure you have:
+### Server Requirements
 
-1. PHP 8.1 or higher
-2. Node.js 16+ and npm
-3. Composer
-4. Access to an EVM-compatible network
-5. Web3 wallet for contract deployment
-6. MySQL/PostgreSQL database
+-   PHP >= 8.2
+-   MySQL >= 8.0 or PostgreSQL >= 14
+-   Node.js >= 16.x
+-   Composer
+
+### Required PHP Extensions
+
+-   BCMath
+-   Ctype
+-   JSON
+-   Mbstring
+-   OpenSSL
+-   PDO
+-   Tokenizer
+-   XML
 
 ## Installation
 
@@ -111,45 +141,34 @@ php artisan key:generate
 php artisan migrate
 ```
 
-6. Deploy factory contract:
+## Key Benefits
 
--   Choose target network
--   Deploy factory contract using provided scripts
--   Update configuration with factory address
+-   Enterprise-grade security through decentralized architecture
+-   Multiple revenue streams for platform administrators
+-   Seamless integration with major DEXes
+-   Regular updates and feature additions
+-   Comprehensive documentation and support
 
-## Factory Contract Deployment
+## What's Included
 
-**Important**: A factory contract must be deployed before using the system. This contract:
+-   Complete source code
+-   Detailed documentation
+-   Dedicated support via Github, Codecanyon, Telegram and Discord
+-   Regular updates and improvements
+-   Installation and setup guide
 
--   Enables frontend contract deployment functionality
--   Manages deployment configurations
--   Handles fee collection
--   Controls contract creation process
+## Support & Updates. I provide a free limitted support service for
 
-All contracts are verified on network explorers (e.g., BSCScan, BaseScan) for transparency.
+-   Installation assistance
+-   Hot Bug fixes
+-   Technical questions
+-   Basic feature requests
 
-## Security Considerations
-
--   All smart contracts undergo thorough security audits
--   Implements secure Web3 authentication
--   Uses standard security practices for Laravel applications
--   Regular security updates and patches
-
-## Contributing
-
-We welcome contributions to Memex. Please read our contributing guidelines before submitting pull requests.
+**Note:** This is a complex Web3 application that requires basic familiarity with blockchain technology and smart contract deployment. Our comprehensive documentation will guide you through the setup process.
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support, please:
-
--   Open an issue in the GitHub repository
--   Join our Discord community
--   Contact our support team
 
 ## Disclaimer
 
