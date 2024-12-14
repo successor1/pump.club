@@ -178,6 +178,30 @@ php artisan migrate
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## In case you need help. contact me
+
+There are so many people contacting me, so be brief and respectful. Also I do this in my freetime, so im online 3-4 hours daily.
+
+[Skype: ![skype](https://cdn.scriptoshi.com/Skype.png)](https://join.skype.com/invite/aKBehNElcDhg)
+[Telegram ![telegram-logo](https://cdn.scriptoshi.com/telegram.png)](https://t.me/freshdropsadmin)
+network conditions.
+
+## I need support keeping servers up and running.
+
+Did this help you? support me by donating any amount crypto:
+
+### EVM Networks (ETH, BNB, etc.)
+
+`0x14Bf01BCd1D415BFf5675EE586Cd71bB2d58baA0`
+
+![EVM Networks QR Code](https://cdn.scriptoshi.com/scriptoshi/0x14Bf01BCd1D415BFf5675EE586Cd71bB2d58baA0.jpg)
+
+### Bitcoin (BTC)
+
+`14NU4N7RPUyqPSmU4Cu7ovtBJfuvS5AVUm`
+
+![Bitcoin QR Code](https://cdn.scriptoshi.com/scriptoshi/14NU4N7RPUyqPSmU4Cu7ovtBJfuvS5AVUm.jpg)
+
 ## Disclaimer
 
 While Memex implements various security measures, users should conduct their own due diligence when deploying contracts or launching tokens. Gas costs mentioned are approximate and may vary based on network conditions.
