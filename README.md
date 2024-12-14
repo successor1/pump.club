@@ -9,6 +9,7 @@
 -   📚 [Online Documentation](https://docs.memex.scriptoshi.com)
 -   🔧 [Documentation Repository](https://github.com/scriptoshi/memex-docs) - Fork or contribute to our docs
 -   📜 [Smart Contracts Repository](https://github.com/scriptoshi/memex-contracts) - Core blockchain contracts
+
     Memex is a sophisticated decentralized application (dApp) designed for creating, hosting and managing meme token launches on a bonding curve. A bonding curve allows for token trading even before the token reaches marketcap. Built for EVM-compatible chains, Memex leverages the automated market making (AMM) constant product algorithm and a secure prebonding mechanism to create a reliable and profitable platform for administrators, meme creators, and meme traders.
 
 ## Demo Access
