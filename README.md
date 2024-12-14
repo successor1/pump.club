@@ -182,9 +182,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 There are so many people contacting me, so be brief and respectful. Also I do this in my freetime, so im online 3-4 hours daily.
 
-[Skype: ![skype](https://cdn.scriptoshi.com/scriptoshi/Skype.png)](https://join.skype.com/invite/aKBehNElcDhg)
+## [![skype](https://cdn.scriptoshi.com/scriptoshi/Skype.png) Message me on Skype:](https://join.skype.com/invite/aKBehNElcDhg)
 
-[Telegram ![telegram-logo](https://cdn.scriptoshi.com/scriptoshi/telegram.png)](https://t.me/freshdropsadmin)
+## [![telegram-logo](https://cdn.scriptoshi.com/scriptoshi/telegram.png) Dm me on telegram](https://t.me/freshdropsadmin)
 
 ## I need support keeping servers up and running.
 
