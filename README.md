@@ -161,7 +161,7 @@ php artisan migrate
 
 -   Complete source code
 -   Detailed documentation
--   Dedicated support via Github, Codecanyon, Telegram and Discord
+-   Dedicated support via Github, Telegram and Discord
 -   Regular updates and improvements
 -   Installation and setup guide
 
