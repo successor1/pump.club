@@ -100,6 +100,7 @@ class HandleInertiaRequests extends Middleware
                 return [...$chains, 11155111]; // always return sepolia
             },
             'isAdminRoute' => $isAdminRoute,
+            'projectId' => config('evm.project_id'),
             'usdRates' =>  function () {
                 return Rate::query()->pluck('usd_rate', 'chainId')->all();
             },

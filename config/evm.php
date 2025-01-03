@@ -5,6 +5,7 @@ return [
     'ankr_key' => env('ANKR_KEY', ''),
     'blastapi_key' => env('BLASTAPI_KEY', ''),
     'infura_key' => env('INFURA_KEY', ''),
+    'project_id' => env('PROJECT_ID', ''),
     'sepolia' => [
         'chainId' => 11155111,
         'virtualEth' => 2,

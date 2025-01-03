@@ -51,7 +51,8 @@ import {
     zksyncSepoliaTestnet,
 } from '@reown/appkit/networks';
 import { http } from '@wagmi/vue';
-export const networks = [arbitrum, bsc, sepolia, linea, base, blast];
+import { fallback } from 'viem';
+export const networks = [sepolia, arbitrum, bsc, linea, base, blast];
 export const projectId = import.meta.env.VITE_PROJECT_ID;
 export const projectUrl = import.meta.env.VITE_PROJECT_URL;
 export const projectName = import.meta.env.VITE_PROJECT_APP_NAME;
@@ -231,16 +232,23 @@ export const blastapiTransports = (BLAST_KEY) => ({
 
 });
 
-export const wagmiAdapter = new WagmiAdapter({
-    networks,
-    multiInjectedProviderDiscovery: true,
-    autoConnect: true,
-    transports: {
-        [sepolia.id]: http('https://eth-sepolia.blastapi.io/a2e5eb38-34a6-4202-bb19-9524b72ff55b'), // http(ankrTransports[sepolia.id]),
-        [bsc.id]: http(ankrTransports[bsc.id]),
-        [polygon.id]: http(ankrTransports[polygon.id]),
+
+function getTransportUrls(chainId, rpcConfig) {
+    const { ankr, infura, blast } = rpcConfig;
+    const urls = [];
+    // Add additional transport URLs from different providers based on configuration
+    if (ankr && ankrTransports(ankr)[chainId]) {
+        urls.push(ankrTransports(ankr)[chainId]);
     }
-});
+    if (infura && infuraTransports(infura)[chainId]) {
+        urls.push(infuraTransports(infura)[chainId]);
+    }
+    if (blast && blastapiTransports(blast)[chainId]) {
+        urls.push(blastapiTransports(blast)[chainId]);
+    }
+    return [...new Set(urls)]; // Remove duplicates
+}
+
 export const useWagmiAdapter = ({
     rpc = 'ankr', // default RPC provider: 'ankr', 'infura', or 'blast'
     ankr = null, // ankrApiKey
@@ -248,32 +256,26 @@ export const useWagmiAdapter = ({
     blast, // blastApiKey
     activeChains = [],
 }) => {
-    console.log(rpc, // default RPC provider: 'ankr', 'infura', or 'blast'
-        ankr, // ankrApiKey
-        infura, // infuraApiKey
-        blast, // blastApiKey
-        activeChains);
-    // Initialize transport configurations based on provided API keys
-    const transportConfigs = {
-        ankr: ankrTransports(ankr ?? ''),
-        infura: infura ? infuraTransports(infura) : {},
-        blast: blast ? blastapiTransports(blast) : {}
-    };
     // Create transports object for WagmiAdapter
+    console.log(ankr, infura, blast);
     const transports = activeChains.reduce((acc, chainId) => {
+        const transportUrls = getTransportUrls(chainId, { ankr, infura, blast });
         // Skip if the chain isn't supported by the selected provider
-        const url = transportConfigs[rpc][chainId] ?? transportConfigs.ankr[chainId] ?? transportConfigs.infura[chainId] ?? transportConfigs.blast[chainId];
-        if (!url) {
+        if (!transportUrls.length) {
             console.warn(`Chain ID ${chainId} not supported by ${rpc} provider`);
             return acc;
         }
-        console.log(`url`, url);
+        const transports = transportUrls.map(url => http(url));
         return {
             ...acc,
-            [chainId]: http(url)
+            [chainId]: fallback(transports, {
+                rank: true,
+                retryCount: 2,
+                timeout: 10000
+            })
         };
     }, {});
-    console.log(`Transports`, transports);
+
     // Create and return the WagmiAdapter instance
     return new WagmiAdapter({
         networks: networks.filter(n => activeChains.includes(n.id)),

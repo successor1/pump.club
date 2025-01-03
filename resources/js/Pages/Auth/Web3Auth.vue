@@ -1,150 +1,154 @@
 <script setup>
-	import { computed, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
-	import { router, usePage } from "@inertiajs/vue3";
-	import { createAppKit, useAppKit } from "@reown/appkit/vue";
-	import {
-		useAccount,
-		useAccountEffect,
-		useDisconnect,
-		useSignMessage,
-	} from "@wagmi/vue";
-	import axios from "axios";
-	import { Power } from "lucide-vue-next";
-	import { blast, linea, sepolia } from "viem/chains";
+import { router, usePage } from "@inertiajs/vue3";
+import { createAppKit, useAppKit } from "@reown/appkit/vue";
+import {
+    useAccount,
+    useAccountEffect,
+    useDisconnect,
+    useSignMessage,
+} from "@wagmi/vue";
+import axios from "axios";
+import { Power } from "lucide-vue-next";
+import { blast, linea, sepolia } from "viem/chains";
 
-	import DangerButton from "@/Components/DangerButton.vue";
-	import PrimaryButton from "@/Components/PrimaryButton.vue";
-	import SecondaryButton from "@/Components/SecondaryButton.vue";
-	import {
-		networks,
-		projectId,
-		projectName,
-		projectUrl,
-		shortenAddress,
-		wagmiAdapter,
-	} from "@/lib/wagmi.js";
+import DangerButton from "@/Components/DangerButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import { shortenAddress } from "@/lib/wagmi";
+import {
+    networks,
+    projectId,
+    projectName,
+    projectUrl,
+    useWagmiAdapter
+} from "@/lib/wagmi.js";
 
-	createAppKit({
-		adapters: [wagmiAdapter],
-		networks: networks.filter((n) =>
-			usePage().props.activeChains.includes(n.id),
-		),
-		projectId,
-		metadata: {
-			name: projectName,
-			description: `${projectName} Crypto Memes Service`,
-			url: projectUrl,
-			icons: [],
-		},
-		themeVariables: {
-			"--w3m-color-mix": "#404040",
-			"--w3m-color-mix-strength": 40,
-		},
-		chainImages: {
-			[sepolia.id]: "https://cdn.scriptoshi.com/evm/ethereum.svg",
-			[linea.id]: "https://cdn.scriptoshi.com/evm/linea.svg",
-			[blast.id]: "https://cdn.scriptoshi.com/evm/blast.svg",
-		},
-	});
-	defineProps({
-		size: { type: String, default: "xs" },
-	});
-	const authCheck = computed(() => !!usePage().props.auth.user);
-	const { address, isConnected } = useAccount();
-	const { open: openConnectModal } = useAppKit();
+createAppKit({
+    adapters: [useWagmiAdapter({
+        rpc: usePage().props.rpc ?? 'ankr',
+        ankr: usePage().props.ankr,
+        infura: usePage().props.infura,
+        blast: usePage().props.blast,
+        activeChains: usePage().props.activeChains,
+    })],
+    networks: networks.filter((n) =>
+        usePage().props.activeChains.includes(n.id),
+    ),
+    projectId: projectId ?? usePage().props.projectId,
+    metadata: {
+        name: projectName,
+        description: `${projectName} Crypto Memes Service`,
+        url: projectUrl,
+        icons: [],
+    },
+    themeVariables: {
+        "--w3m-color-mix": "#404040",
+        "--w3m-color-mix-strength": 40,
+    },
+    chainImages: {
+        [sepolia.id]: "https://cdn.scriptoshi.com/evm/ethereum.svg",
+        [linea.id]: "https://cdn.scriptoshi.com/evm/linea.svg",
+        [blast.id]: "https://cdn.scriptoshi.com/evm/blast.svg",
+    },
+});
+const { open: openConnectModal } = useAppKit();
 
-	const { disconnect } = useDisconnect();
-	const { signMessageAsync } = useSignMessage();
+defineProps({
+    size: { type: String, default: "xs" },
+});
+const authCheck = computed(() => !!usePage().props.auth.user);
+const { address, isConnected } = useAccount();
 
-	const handleVerify = async () => {
-		try {
-			// Get auth code
-			const { data } = await axios.post(window.route("auth.code"));
-			const authCode = data.authCode;
-			// Sign message
-			const signature = await signMessageAsync({
-				message: authCode,
-			});
+const { disconnect } = useDisconnect();
+const { signMessageAsync } = useSignMessage();
 
-			// Verify signature and login
-			router.post(
-				window.route("login"),
-				{
-					address: address.value,
-					signature,
-				},
-				{
-					preserveState: true,
-					preserveScroll: true,
-				},
-			);
-		} catch (error) {
-			console.error("Verification failed:", error);
-		}
-	};
-	const isSigningOut = ref(false);
-	const signOut = async () => {
-		if (isSigningOut.value) return;
-		isSigningOut.value = true;
-		if (authCheck.value)
-			router.post(
-				window.route("logout"),
-				{},
-				{
-					onFinish() {
-						isSigningOut.value = false;
-					},
-				},
-			);
-	};
+const handleVerify = async () => {
+    try {
+        // Get auth code
+        const { data } = await axios.post(window.route("auth.code"));
+        const authCode = data.authCode;
+        // Sign message
+        const signature = await signMessageAsync({
+            message: authCode,
+        });
 
-	const signIn = async () => {
-		if (!authCheck.value) await handleVerify();
-	};
-	useAccountEffect({
-		onConnect(data) {
-			signIn();
-		},
-		onDisconnect() {
-			signOut();
-		},
-	});
-	watch([isConnected, authCheck], ([isConnected, authCheck]) => {
-		if (isConnected && !authCheck) {
-			return signIn();
-		}
-		if (!isConnected && authCheck) {
-			return signOut();
-		}
-	});
+        // Verify signature and login
+        router.post(
+            window.route("login"),
+            {
+                address: address.value,
+                signature,
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
+    } catch (error) {
+        console.error("Verification failed:", error);
+    }
+};
+const isSigningOut = ref(false);
+const signOut = async () => {
+    if (isSigningOut.value) return;
+    isSigningOut.value = true;
+    if (authCheck.value)
+        router.post(
+            window.route("logout"),
+            {},
+            {
+                onFinish() {
+                    isSigningOut.value = false;
+                },
+            },
+        );
+};
+
+const signIn = async () => {
+    if (!authCheck.value) await handleVerify();
+};
+useAccountEffect({
+    onConnect(data) {
+        signIn();
+    },
+    onDisconnect() {
+        signOut();
+    },
+});
+watch([isConnected, authCheck], ([isConnected, authCheck]) => {
+    if (isConnected && !authCheck) {
+        return signIn();
+    }
+    if (!isConnected && authCheck) {
+        return signOut();
+    }
+});
 </script>
 
 <template>
-	<div class="flex gap-2">
-		<template v-if="$page.props.auth.user && isConnected">
-			<SecondaryButton
-				:size="size"
-				@click="openConnectModal({ view: 'Account' })"
-				outlined>
-				{{ shortenAddress(address) }}
-			</SecondaryButton>
-			<DangerButton size="sm" icon-mode outlined @click="disconnect">
-				<Power class="w-4 h-4 stroke-[3]" />
-			</DangerButton>
-		</template>
-		<template v-else-if="isConnected">
-			<SecondaryButton :size="size" @click="handleVerify">
-				Verify Signature
-			</SecondaryButton>
-			<DangerButton :size="size" @click="disconnect()">
-				Disconnect
-			</DangerButton>
-		</template>
-		<template v-else>
-			<PrimaryButton :size="size" outlined @click="openConnectModal">
-				Connect Wallet
-			</PrimaryButton>
-		</template>
-	</div>
+    <div class="flex gap-2">
+        <template v-if="$page.props.auth.user && isConnected">
+            <SecondaryButton :size="size" @click="openConnectModal({ view: 'Account' })" outlined>
+                {{ shortenAddress(address) }}
+            </SecondaryButton>
+            <DangerButton size="sm" icon-mode outlined @click="disconnect">
+                <Power class="w-4 h-4 stroke-[3]" />
+            </DangerButton>
+        </template>
+        <template v-else-if="isConnected">
+            <SecondaryButton :size="size" @click="handleVerify">
+                Verify Signature
+            </SecondaryButton>
+            <DangerButton :size="size" @click="disconnect()">
+                Disconnect
+            </DangerButton>
+        </template>
+        <template v-else>
+            <PrimaryButton :size="size" outlined @click="openConnectModal">
+                Connect Wallet
+            </PrimaryButton>
+        </template>
+    </div>
 </template>
