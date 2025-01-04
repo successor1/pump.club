@@ -130,7 +130,7 @@ watch([isConnected, authCheck], ([isConnected, authCheck]) => {
 <template>
     <div class="flex gap-2">
         <template v-if="$page.props.auth.user && isConnected">
-            <SecondaryButton :size="size" @click="openConnectModal({ view: 'Account' })" outlined>
+            <SecondaryButton :size="size" @click="openConnectModal()" outlined>
                 {{ shortenAddress(address) }}
             </SecondaryButton>
             <DangerButton size="sm" icon-mode outlined @click="disconnect">
