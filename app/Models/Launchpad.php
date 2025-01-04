@@ -62,6 +62,7 @@ class Launchpad extends Model
         'discord',
         'telegram',
         'website',
+        'livestreamId',
         'status',
         'logo',
         'featured',

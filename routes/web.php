@@ -35,6 +35,9 @@ Route::name('launchpads.')->controller(LaunchpadsController::class)->group(funct
     Route::get('/{type?}', 'index')->whereIn('type', ['trending', 'top', 'featured', 'rising', 'new', 'finalized', 'mine'])->name('index');
     Route::get('/launch', 'create')->name('create');
     Route::post('/launchpads/store', 'store')->name('store');
+    Route::post('/launchpads/update/{launchpad}', 'update')->name('update');
+    Route::post('/launchpads/status/{launchpad}', 'updateStatus')->name('update.status');
+    Route::post('/launchpads/livestream/{launchpad}', 'updateLiveStream')->name('update.livestream');
     Route::put('/launchpads/finalize/{launchpad}', 'finalize')->name('finalize');
     Route::get('/{launchpad:contract}', 'show')
         ->where('launchpad', '0x[a-fA-F0-9]{40}')

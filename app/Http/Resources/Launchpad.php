@@ -29,6 +29,7 @@ class Launchpad extends JsonResource
             'discord' => $this->discord,
             'telegram' => $this->telegram,
             'website' => $this->website,
+            'livestreamId' => $this->livestreamId,
             'status' => $this->status,
             'logo' => $this->logo,
             'featured' => $this->featured,

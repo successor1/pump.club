@@ -59,6 +59,7 @@
         "viem": "^2.21.51",
         "vue-filepond": "^7.0.4",
         "vue-i18n": "^10.0.5",
+        "vue-lite-youtube-embed": "^1.2.4",
         "vue-tippy": "^6.0.0-alpha.65",
         "vue3-emoji-picker": "^1.1.8",
         "vue3-simple-icons": "^13.2.0",

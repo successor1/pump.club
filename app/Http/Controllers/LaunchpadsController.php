@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 
 use function Clue\StreamFilter\fun;
@@ -440,45 +441,55 @@ class LaunchpadsController extends Controller
      */
     public function update(Request $request, Launchpad $launchpad)
     {
+        Gate::authorize('update', $launchpad);
         $request->validate([
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'factory_id' => ['required', 'integer', 'exists:factories,id'],
-            'contract' => ['string', 'required'],
-            'token' => ['string', 'required'],
-            'name' => ['string', 'required'],
-            'symbol' => ['string', 'required'],
-            'description' => ['string', 'required'],
-            'chainId' => ['string', 'required'],
             'twitter' => ['string', 'nullable'],
             'discord' => ['string', 'nullable'],
             'telegram' => ['string', 'nullable'],
             'website' => ['string', 'nullable'],
-            'logo' => ['string', 'required'],
-            'logo_uri' => ['required', 'string'],
-            'logo_upload' => ['required', 'boolean'],
-            'logo_path' => ['nullable',  'required_if:logo_upload,true'],
-            'featured' => ['nullable', 'boolean'],
-            'kingofthehill' => ['nullable', 'boolean'],
-            'active' => ['nullable', 'boolean'],
         ]);
-        app(Uploads::class)->upload($request,  $launchpad, 'logo');
-        $launchpad->user_id = $request->user_id;
-        $launchpad->factory_id = $request->factory_id;
-        $launchpad->contract = $request->contract;
-        $launchpad->token = $request->token;
-        $launchpad->name = $request->name;
-        $launchpad->symbol = $request->symbol;
-        $launchpad->description = $request->description;
-        $launchpad->chainId = $request->chainId;
         $launchpad->twitter = $request->twitter;
         $launchpad->discord = $request->discord;
         $launchpad->telegram = $request->telegram;
         $launchpad->website = $request->website;
+        $launchpad->save();
+        return back()->with('success', 'Launchpad updated!');
+    }
+
+    /**
+     * Update the livestream information
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function updateLiveStream(Request $request, Launchpad $launchpad)
+    {
+        Gate::authorize('update', $launchpad);
+        $request->validate([
+            'livestreamId' => ['string', 'required', 'max:11'],
+        ]);
+        $launchpad->livestreamId = $request->livestreamId;
+        $launchpad->save();
+        return back()->with('success', 'Launchpad updated!');
+    }
+
+    /**
+     * Update launchpad status
+     * Will be overridded on frontend by contract status.
+     * @param \Illuminate\Http\Request $request
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function updateStatus(Request $request, Launchpad $launchpad)
+    {
+        Gate::authorize('update', $launchpad);
+        $request->validate([
+            'status' => [new Enum(LaunchpadStatus::class)],
+        ]);
         $launchpad->status = $request->status;
-        $launchpad->logo = $request->logo;
-        $launchpad->featured = $request->featured;
-        $launchpad->kingofthehill = $request->kingofthehill;
-        $launchpad->active = $request->active;
         $launchpad->save();
         return back()->with('success', 'Launchpad updated!');
     }
