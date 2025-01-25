@@ -278,7 +278,7 @@ export const useWagmiAdapter = ({
 
     // Create and return the WagmiAdapter instance
     return new WagmiAdapter({
-        networks: networks.filter(n => activeChains.includes(n.id)),
+        networks: networks.filter(n => activeChains.includes(n?.id)),
         multiInjectedProviderDiscovery: true,
         autoConnect: true,
         transports,
