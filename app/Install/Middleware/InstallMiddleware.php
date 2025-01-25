@@ -43,12 +43,11 @@ class InstallMiddleware
     public static function markAsInstalled(): bool
     {
         try {
-            // Create the installed file with installation timestamp
-            Storage::put('installed', json_encode([
+            $content = json_encode([
                 'installed_at' => now()->toIso8601String(),
                 'version' => config('app.version', '1.0.0')
-            ]));
-            return true;
+            ]);
+            return file_put_contents(storage_path('app/public/installed'), $content) !== false;
         } catch (\Exception $e) {
             return false;
         }

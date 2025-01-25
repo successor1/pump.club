@@ -89,12 +89,10 @@ class InstallController extends Controller
         // Test database connection
         $success = $this->envHelper->updateMultipleEnv($validated);
         if ($success) {
-
             // Mark as installed
             if (!InstallMiddleware::markAsInstalled()) {
                 return back()->with('error', 'Failed to mark application as installed.');
             }
-            Artisan::call('config:clear');
             return redirect()->route('install.final');
         }
         return back()->with('error', 'Failed to update environment variables.');
