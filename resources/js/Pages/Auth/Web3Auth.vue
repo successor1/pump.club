@@ -48,9 +48,9 @@ createAppKit({
         "--w3m-color-mix-strength": 40,
     },
     chainImages: {
-        [sepolia.id]: "https://cdn.scriptoshi.com/evm/ethereum.svg",
-        [linea.id]: "https://cdn.scriptoshi.com/evm/linea.svg",
-        [blast.id]: "https://cdn.scriptoshi.com/evm/blast.svg",
+        [sepolia.id]: "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg",
+        [linea.id]: "https://icons.llamao.fi/icons/chains/rsz_linea.jpg",
+        [blast.id]: "https://icons.llamao.fi/icons/chains/rsz_blast.jpg",
     },
 });
 const { open: openConnectModal } = useAppKit();
@@ -130,23 +130,42 @@ watch([isConnected, authCheck], ([isConnected, authCheck]) => {
 <template>
     <div class="flex gap-2">
         <template v-if="$page.props.auth.user && isConnected">
-            <SecondaryButton :size="size" @click="openConnectModal()" outlined>
+            <SecondaryButton
+                :size="size"
+                @click="openConnectModal()"
+                outlined
+            >
                 {{ shortenAddress(address) }}
             </SecondaryButton>
-            <DangerButton size="sm" icon-mode outlined @click="disconnect">
+            <DangerButton
+                size="sm"
+                icon-mode
+                outlined
+                @click="disconnect"
+            >
                 <Power class="w-4 h-4 stroke-[3]" />
             </DangerButton>
         </template>
         <template v-else-if="isConnected">
-            <SecondaryButton :size="size" @click="handleVerify">
+            <SecondaryButton
+                :size="size"
+                @click="handleVerify"
+            >
                 Verify Signature
             </SecondaryButton>
-            <DangerButton :size="size" @click="disconnect()">
+            <DangerButton
+                :size="size"
+                @click="disconnect()"
+            >
                 Disconnect
             </DangerButton>
         </template>
         <template v-else>
-            <PrimaryButton :size="size" outlined @click="openConnectModal">
+            <PrimaryButton
+                :size="size"
+                outlined
+                @click="openConnectModal"
+            >
                 Connect Wallet
             </PrimaryButton>
         </template>

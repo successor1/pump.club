@@ -12,7 +12,11 @@
 
         <!-- Scripts -->
         @routes
-        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+        @if(request()->is('install*'))
+            @vite(['resources/js/install.js', "resources/js/Pages/{$page['component']}.vue"])
+        @else
+             @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+        @endif
         @inertiaHead
         <script src="https://s3.tradingview.com/tv.js"></script>
     </head>

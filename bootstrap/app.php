@@ -18,8 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->prefix('admin')
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
-            Route::middleware([\App\Http\Middleware\HandleInertiaRequests::class])
-                ->prefix('install')
+            Route::prefix('install')
                 ->name('install.')
                 ->withoutMiddleware(StartSession::class)
                 ->group(app_path('Install/routes.php'));

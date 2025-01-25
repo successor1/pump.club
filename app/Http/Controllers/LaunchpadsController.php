@@ -69,8 +69,8 @@ class LaunchpadsController extends Controller
             'ads' => fn() => Promo::query()
                 ->where('active', true)
                 ->when(!config('app.demo', false), function (Builder $query) {
-                    $query->where('start_date', '<=', now())
-                        ->where('end_date', '>=', now());
+                    $query->where('starts_at', '<=', now())
+                        ->where('ends_at', '>=', now());
                 })
                 ->inRandomOrder()
                 ->take(3)
