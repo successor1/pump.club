@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AppkitCsp;
 use App\Http\Middleware\IsAdmin;
 use App\Install\Middleware\InstallMiddleware;
 use Illuminate\Foundation\Application;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            AppkitCsp::class
         ], prepend: [
             InstallMiddleware::class
         ]);
