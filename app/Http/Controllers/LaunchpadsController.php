@@ -408,7 +408,7 @@ class LaunchpadsController extends Controller
                 DB::raw('MIN(t.usd) as low')
             ])
             ->leftJoin('trades as t', 'l.id', '=', 't.launchpad_id')
-            ->groupBy('l.id', 'l.name', 'l.symbol', 'l.contract');
+            ->groupBy('l.id', 'l.name', 'l.symbol', 'l.logo', 'l.contract', 'l.created_at');  // Added missing columns
 
         // Use the subquery to apply the window function
         return DB::table(DB::raw("({$volumeQuery->toSql()}) as volumes"))

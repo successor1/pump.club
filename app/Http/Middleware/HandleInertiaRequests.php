@@ -96,7 +96,7 @@ class HandleInertiaRequests extends Middleware
                         return array_keys($foundry['addresses']);
                     });
                 }
-                $chains = Factory::query()->pluck('chainId')->values()->unique()->all();
+                $chains = Factory::query()->pluck('chainId')->map(fn($ch) => (int)$ch)->values()->unique()->all();
                 return [...$chains, 11155111]; // always return sepolia
             },
             'isAdminRoute' => $isAdminRoute,
