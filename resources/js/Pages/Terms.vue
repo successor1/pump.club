@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'; /* PartiallyEnd: #3632/scriptSetup.vue */
-import AppLayout from '@/Layouts/AppLayout.vue'
+
 </script>
 
 <template>
