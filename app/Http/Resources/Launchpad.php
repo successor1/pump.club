@@ -38,6 +38,7 @@ class Launchpad extends JsonResource
             'volume24h' => $this->volume24h ?? '0.00',
             'age' => $this->created_at->diffForHumans(),
             'trades_count' => $this->trades_count,
+            'holders_count' => $this->holders_count,
             // to be pulled
             'percentage' => 0,
             'marketCap' => 0,

@@ -72,7 +72,12 @@ const animate = ref(true);
             <div class="flex items-center w-full bg-gray-850 h-12 relative overflow-x-hidden">
                 <div class="flex w-full items-center overflow-x-auto [scrollbar-width:none]">
                     <div class="flex w-full items-center">
-                        <BarButton v-for="(launch, i) in top" :key="launch.id" :launch="launch" :active="i === 0" />
+                        <BarButton
+                            v-for="(launch, i) in top"
+                            :key="launch.id"
+                            :launch="launch"
+                            :active="i === 0"
+                        />
                     </div>
                 </div>
                 <div
@@ -81,68 +86,124 @@ const animate = ref(true);
             </div>
         </template>
         <div class="grid my-8 container">
-            <div v-if="type === 'mine'" class="flex flex-col justify-center">
+            <div
+                v-if="type === 'mine'"
+                class="flex flex-col justify-center"
+            >
                 <h3 class="flex items-center">
-                    <LoaderCircle v-if="launchpadsInfo.loading.value" class="w-6 h-6 mr-2 animate-spin" />
+                    <LoaderCircle
+                        v-if="launchpadsInfo.loading.value"
+                        class="w-6 h-6 mr-2 animate-spin"
+                    />
                     {{ $t("My Launchpads") }}
                 </h3>
                 <div class="flex items-center mt-4 gap-4">
-                    <BaseButton link href="/launch" outlined>
+                    <BaseButton
+                        link
+                        href="/launch"
+                        outlined
+                    >
                         {{ $t("Launch a new token") }}
                     </BaseButton>
                 </div>
             </div>
             <template v-else>
-                <div class="flex items-start justify-center sm:justify-between">
+                <div class="flex flex-col items-center sm:flex-row sm:items-start justify-center sm:justify-between">
                     <div class="flex flex-col justify-center items-center sm:items-start">
                         <h3 class="text-xl font-extralight">
                             {{ $t("Discover the next trending meme") }}
                         </h3>
                         <h3>{{ $t("before everyone else!") }}</h3>
                         <div class="flex items-center mt-4 gap-4">
-                            <BaseButton @click="showHowItWorks = !showHowItWorks" secondary outlined>
+                            <BaseButton
+                                @click="showHowItWorks = !showHowItWorks"
+                                secondary
+                                outlined
+                            >
                                 {{ $t("How Does it work") }}
                             </BaseButton>
-                            <BaseButton link href="/launch" outlined>
+                            <BaseButton
+                                link
+                                href="/launch"
+                                outlined
+                            >
                                 {{ $t("Launch your meme") }}
                             </BaseButton>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <a v-for="ad in $page.props.ads" :key="ad.id" :href="ad.url">
-                            <img class="w-auto h-40 border border-gray-650 rounded" :src="ad.image" />
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <a
+                            v-for="ad in $page.props.ads"
+                            :key="ad.id"
+                            :href="ad.url"
+                        >
+                            <img
+                                class="w-auto h-40 border border-gray-650 rounded"
+                                :src="ad.image"
+                            />
                         </a>
                     </div>
                 </div>
                 <div class="flex gap-4 items-center my-8 mx-4 justify-center sm:justify-start sm:mx-[unset] flex-wrap">
                     <appkit-network-button v-if="chainId" />
-                    <BaseButton @click="animate = !animate" size="xss" class="font-semibold !px-4 py-1">
+                    <BaseButton
+                        @click="animate = !animate"
+                        size="xss"
+                        class="font-semibold !px-4 py-1"
+                    >
                         {{ $t("Animation") }}
-                        <SmallSwitch :modelValue="animate" class="ml-2"></SmallSwitch>
+                        <SmallSwitch
+                            :modelValue="animate"
+                            class="ml-2"
+                        ></SmallSwitch>
                     </BaseButton>
-                    <BaseButton v-for="filter in filters" :key="filter.id" :href="route('launchpads.index', {
-                        type: filter.id == 'trending' ? '' : filter.id,
-                    })
-                        " :secondary="filter.id != type" link size="xs" class="font-semibold !px-4">
-                        <component :is="filter.icon" class="w-4 h-4 mr-1 -ml-1 inline-flex" />
+                    <BaseButton
+                        v-for="filter in filters"
+                        :key="filter.id"
+                        :href="route('launchpads.index', {
+                            type: filter.id == 'trending' ? '' : filter.id,
+                        })
+                            "
+                        :secondary="filter.id != type"
+                        link
+                        size="xs"
+                        class="font-semibold !px-4"
+                    >
+                        <component
+                            :is="filter.icon"
+                            class="w-4 h-4 mr-1 -ml-1 inline-flex"
+                        />
                         {{ ucfirst(filter.id) }}
                     </BaseButton>
-                    <FormInput v-model="search" class="ml-auto sm:max-w-xs w-full" size="sm">
+                    <FormInput
+                        v-model="search"
+                        class="ml-auto sm:max-w-xs w-full"
+                        size="sm"
+                    >
                         <template #lead>
                             <Search class="w-4 h-4 ml-1 text-gray-400" />
                         </template>
                     </FormInput>
                 </div>
             </template>
-            <LoaderCircle v-if="type !== 'mine' && launchpadsInfo.loading.value"
-                class="w-8 mt-5 text-white h-8 mr-2 animate-spin" />
+            <LoaderCircle
+                v-if="type !== 'mine' && launchpadsInfo.loading.value"
+                class="w-8 mt-5 text-white h-8 mr-2 animate-spin"
+            />
             <CollapseTransition>
-                <AnimationsRow :initialTrades="$page.props.initialTrades" v-show="animate" />
+                <AnimationsRow
+                    :initialTrades="$page.props.initialTrades"
+                    v-show="animate"
+                />
             </CollapseTransition>
 
             <div class="grid mb-6 md:grid-col-3 lg:grid-cols-3 gap-5">
-                <IndexCard v-for="lpd in launchpadsInfo.launchpads.value" :key="lpd.name" :id="lpd.contract"
-                    :launchpad="lpd" />
+                <IndexCard
+                    v-for="lpd in launchpadsInfo.launchpads.value"
+                    :key="lpd.name"
+                    :id="lpd.contract"
+                    :launchpad="lpd"
+                />
             </div>
             <Pagination :meta="launchpads.meta" />
             <HowItWorksModal v-model:show="showHowItWorks" />

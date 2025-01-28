@@ -39,8 +39,12 @@ const activeTab = ref("Chat");
             <div class="flex items-center w-full bg-gray-850 h-12 relative overflow-x-hidden">
                 <div class="flex w-full items-center overflow-x-auto [scrollbar-width:none]">
                     <div class="flex w-full items-center">
-                        <BarButton v-for="launch in top" :key="launch.id" :launch="launch"
-                            :active="launch.id === launchpad.id" />
+                        <BarButton
+                            v-for="launch in top"
+                            :key="launch.id"
+                            :launch="launch"
+                            :active="launch.id === launchpad.id"
+                        />
                     </div>
                 </div>
                 <div
@@ -48,36 +52,74 @@ const activeTab = ref("Chat");
                 </div>
             </div>
         </template>
-        <div class="flex space-x-8 mt-4 justify-center">
-            <div class="flex flex-col gap-2 w-2/3">
+        <div class="flex flex-col items-center md:items-start md:flex-row gap-8 mt-4 md:justify-center">
+            <div class="flex flex-col gap-2 w-full px-4 md:px-0 md:w-2/3">
                 <div class="h-4/8">
                     <TradingViewChart :launchpad="launchpad" />
                 </div>
                 <div class="flex gap-2 h-fit mt-6">
-                    <BaseButton v-for="tab in tabs" :key="tab.name" :outlined="tab.name != activeTab"
-                        @click="activeTab = tab.name" size="xs">
-                        <VueIcon :icon="RiExchangeLine" v-if="tab.vueicon" class="w-4 h-4 mr-1 -ml-1 inline-flex" />
-                        <component v-else class="w-4 h-4 mr-1 -ml-1 inline-flex" :is="tab.icon" />
+                    <BaseButton
+                        v-for="tab in tabs"
+                        :key="tab.name"
+                        :outlined="tab.name != activeTab"
+                        @click="activeTab = tab.name"
+                        size="xs"
+                    >
+                        <VueIcon
+                            :icon="RiExchangeLine"
+                            v-if="tab.vueicon"
+                            class="w-4 h-4 mr-1 -ml-1 inline-flex"
+                        />
+                        <component
+                            v-else
+                            class="w-4 h-4 mr-1 -ml-1 inline-flex"
+                            :is="tab.icon"
+                        />
 
                         {{ tab.name }}
                     </BaseButton>
                 </div>
 
                 <div class="text-gray-300 mt-4 grid gap-1 relative h-full mb-8">
-                    <Chat v-if="activeTab == 'Chat'" :launchpadId="launchpad.id" :devId="launchpad.user_id"
-                        :initial-messages="$page.props.msgs" class="md:w-full" />
-                    <Trades :trades="$page.props.trades" :chainId="launchpad.chainId" :bcurve="launchpad.contract"
-                        v-if="activeTab == 'Trades'" />
-                    <Holders :holders="$page.props.holders" :chainId="launchpad.chainId" :launchpad="launchpad"
-                        :usdRate="rate.usd_rate" v-if="activeTab == 'Holders'" />
-                    <DevStream :launchpad="launchpad" v-if="activeTab == 'Dev Stream'" />
+                    <Chat
+                        v-if="activeTab == 'Chat'"
+                        :launchpadId="launchpad.id"
+                        :devId="launchpad.user_id"
+                        :initial-messages="$page.props.msgs"
+                        class="md:w-full"
+                    />
+                    <Trades
+                        :trades="$page.props.trades"
+                        :chainId="launchpad.chainId"
+                        :bcurve="launchpad.contract"
+                        v-if="activeTab == 'Trades'"
+                    />
+                    <Holders
+                        :holders="$page.props.holders"
+                        :chainId="launchpad.chainId"
+                        :launchpad="launchpad"
+                        :usdRate="rate.usd_rate"
+                        v-if="activeTab == 'Holders'"
+                    />
+                    <DevStream
+                        :launchpad="launchpad"
+                        v-if="activeTab == 'Dev Stream'"
+                    />
                 </div>
             </div>
-            <div class="grid mb-12 gap-4 h-fit w-fit mx-auto px-3">
+            <div class="grid mb-12 gap-4 w-full px-4 h-fit md:w-fit md:mx-auto md:px-3">
                 <BuyCard :launchpad="launchpad" />
-                <LockCard v-if="launchpad.isOwner" :launchpad="launchpad" />
-                <Info :rank="stats.rank" :rate="rate" :totalVolume="stats.totalVolume"
-                    :totalLaunchpads="stats.totalLaunchpads" :launchpad="launchpad" />
+                <LockCard
+                    v-if="launchpad.isOwner"
+                    :launchpad="launchpad"
+                />
+                <Info
+                    :rank="stats.rank"
+                    :rate="rate"
+                    :totalVolume="stats.totalVolume"
+                    :totalLaunchpads="stats.totalLaunchpads"
+                    :launchpad="launchpad"
+                />
             </div>
         </div>
     </AppLayout>

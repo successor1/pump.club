@@ -14,6 +14,11 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+Route::get('/terms', fn() => Inertia::render('Terms'))->name('terms');
+Route::get('/privacy', fn() => Inertia::render('Privacy'))->name('privacy');
+
+
 Route::controller(S3Controller::class)
     ->group(function () {
         Route::post('sign/{disk?}/{folder?}', 'sign')->name('s3.sign');
