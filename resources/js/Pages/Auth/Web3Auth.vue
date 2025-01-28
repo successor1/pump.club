@@ -24,7 +24,6 @@ import {
     projectUrl,
     useWagmiAdapter
 } from "@/lib/wagmi.js";
-
 createAppKit({
     adapters: [useWagmiAdapter({
         rpc: usePage().props.rpc ?? 'ankr',
@@ -57,6 +56,7 @@ const { open: openConnectModal } = useAppKit();
 
 defineProps({
     size: { type: String, default: "xs" },
+    full: Boolean
 });
 const authCheck = computed(() => !!usePage().props.auth.user);
 const { address, isConnected } = useAccount();
@@ -132,6 +132,7 @@ watch([isConnected, authCheck], ([isConnected, authCheck]) => {
         <template v-if="$page.props.auth.user && isConnected">
             <SecondaryButton
                 :size="size"
+                :class="{ 'w-full': full }"
                 @click="openConnectModal()"
                 outlined
             >
@@ -139,22 +140,29 @@ watch([isConnected, authCheck], ([isConnected, authCheck]) => {
             </SecondaryButton>
             <DangerButton
                 size="sm"
-                icon-mode
+                :class="{ 'w-full': full }"
+                :icon-mode="!full"
                 outlined
                 @click="disconnect"
             >
+                <span
+                    class="mr-2"
+                    v-if="full"
+                > Logout </span>
                 <Power class="w-4 h-4 stroke-[3]" />
             </DangerButton>
         </template>
         <template v-else-if="isConnected">
             <SecondaryButton
                 :size="size"
+                :class="{ 'w-full': full }"
                 @click="handleVerify"
             >
                 Verify Signature
             </SecondaryButton>
             <DangerButton
                 :size="size"
+                :class="{ 'w-full': full }"
                 @click="disconnect()"
             >
                 Disconnect
@@ -164,6 +172,7 @@ watch([isConnected, authCheck], ([isConnected, authCheck]) => {
             <PrimaryButton
                 :size="size"
                 outlined
+                :class="{ 'w-full': full }"
                 @click="openConnectModal"
             >
                 Connect Wallet

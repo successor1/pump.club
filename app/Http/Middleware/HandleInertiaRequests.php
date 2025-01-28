@@ -91,9 +91,9 @@ class HandleInertiaRequests extends Middleware
             })->keyBy('chainId'),
             'activeChains' => function () use ($isAdminRoute) {
                 if ($isAdminRoute) {
-                    return Cache::remember('chainids', 60, function () {
+                    return Cache::remember('chainids2', 60, function () {
                         $foundry = json_decode(File::get(base_path('evm/Foundry.json')), true);
-                        return array_keys($foundry['addresses']);
+                        return collect(array_keys($foundry['addresses']))->map(fn($ch) => (int)$ch)->values()->unique()->all();
                     });
                 }
                 $chains = Factory::query()->pluck('chainId')->map(fn($ch) => (int)$ch)->values()->unique()->all();
