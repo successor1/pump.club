@@ -11,7 +11,7 @@ import {
 } from "@wagmi/vue";
 import axios from "axios";
 import { Power } from "lucide-vue-next";
-import { blast, linea, sepolia } from "viem/chains";
+import { avalanche, avalancheFuji, blast, linea, sepolia } from "viem/chains";
 
 import DangerButton from "@/Components/DangerButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -47,6 +47,8 @@ createAppKit({
         "--w3m-color-mix-strength": 40,
     },
     chainImages: {
+        [avalanche.id]: "https://icons.llamao.fi/icons/chains/rsz_avalanche.jpg",
+        [avalancheFuji.id]: "https://icons.llamao.fi/icons/chains/rsz_avalanche.jpg",
         [sepolia.id]: "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg",
         [linea.id]: "https://icons.llamao.fi/icons/chains/rsz_linea.jpg",
         [blast.id]: "https://icons.llamao.fi/icons/chains/rsz_blast.jpg",

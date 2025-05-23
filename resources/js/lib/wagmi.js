@@ -52,7 +52,7 @@ import {
 } from '@reown/appkit/networks';
 import { http } from '@wagmi/vue';
 import { fallback } from 'viem';
-export const networks = [sepolia, arbitrum, bsc, linea, base, blast];
+export const networks = [avalanche, avalancheFuji, sepolia, arbitrum, bsc, linea, base, blast];
 export const projectId = import.meta.env.VITE_PROJECT_ID;
 export const projectUrl = import.meta.env.VITE_PROJECT_URL;
 export const projectName = import.meta.env.VITE_PROJECT_APP_NAME;
@@ -230,6 +230,9 @@ export const blastapiTransports = (BLAST_KEY) => ({
     // ZetaChain
     [zetachain.id]: `https://zetachain-mainnet.blastapi.io/${BLAST_KEY}`,
 
+    // Avalanche & Avalanche Fuji Testnet
+    [avalanche.id]: `https://ava-mainnet.blastapi.io/${BLAST_KEY}`,
+    [avalancheFuji.id]: `https://ava-testnet.blastapi.io/${BLAST_KEY}`,
 });
 
 
@@ -261,6 +264,7 @@ export const useWagmiAdapter = ({
     const transports = activeChains.reduce((acc, chainId) => {
         const transportUrls = getTransportUrls(chainId, { ankr, infura, blast });
         // Skip if the chain isn't supported by the selected provider
+        console.log(chainId);
         if (!transportUrls.length) {
             console.warn(`Chain ID ${chainId} not supported by ${rpc} provider`);
             return acc;
@@ -275,6 +279,11 @@ export const useWagmiAdapter = ({
             })
         };
     }, {});
+
+    activeChains.push(43113);
+
+    console.log(activeChains);
+    console.log(networks.filter(n => activeChains.includes(n?.id)));
 
     // Create and return the WagmiAdapter instance
     return new WagmiAdapter({

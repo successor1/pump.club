@@ -74,6 +74,8 @@ Currently integrated networks:
 ![Blast](https://cdn.scriptoshi.com/envato/blast.jpg)
 ![Linea](https://cdn.scriptoshi.com/envato/linea.jpg)
 ![Sepolia](https://cdn.scriptoshi.com/envato/sepolia.jpg)
+![Avalanche](https://cdn.scriptoshi.com/envato/avalanche.jpg)
+![Avalanche Fuji Testnet](https://cdn.scriptoshi.com/envato/avalanche.jpg)
 
 _More networks coming soon! Custom chain integration available upon request._
 
