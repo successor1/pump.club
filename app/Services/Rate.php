@@ -14,16 +14,16 @@ class Rate
      * call the coincap api
      */
 
-    public static function api($path)
-    {
-
-        $token = config('env.coincap_apikey');
-        $response = Http::withToken($token)->get("https://api.coincap.io/v2/$path");
-        if (!$response->successful()) {
-            throw new \Exception("Failed to fetch api for $path");
-        }
-        return $response->json('data', []);
-    }
+     public static function api($path)
+     {
+ 
+         $token = config('env.coincap_apikey');
+         $response = Http::withToken($token)->get("https://rest.coincap.io/v3/$path/?apiKey=$token");
+         if (!$response->successful()) {
+             throw new \Exception("Failed to fetch api for $path");
+         }
+         return $response->json('data', []);
+     } 
 
     /**
      * cache the coincap symbols for easy retriviels

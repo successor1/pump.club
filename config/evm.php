@@ -111,6 +111,21 @@ return [
         'weth' => "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
         'feeTo' => null,
     ],
+    'avalancheFuji' => [
+        'chainId' => 43113,
+        'virtualEth' => 2,
+        'symbol' => 'AVAX',
+        'preBondingTarget' => 2,
+        'bondingTarget' => 8,
+        'minContribution' => 0.01,
+        'poolFee' => 3000, // 0.3%
+        'sellFee' => 100,
+        'graph' => 'https://gateway.thegraph.com/api/[api-key]/subgraphs/id/GVH9h9KZ9CqheUEL93qMbq7QwgoBu32QXQDPR6bev4Eo',
+        'uniswapV3Factory' => "0x740b1c1de25031C31FF4fC9A62f554A55cdC1baD",
+        'positionManager' => "0x655C406EBFa14EE2006250925e54ec43AD184f8B",
+        'weth' => "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+        'feeTo' => null,
+    ],
     'celo' => [
         'chainId' => 142220,
         'virtualEth' => 2,
