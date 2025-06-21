@@ -2,10 +2,10 @@
 pragma solidity ^0.8.20;
 
 import "./interfaces/IFoundry.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/proxy/Clones.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Pausable.sol";
+import "../openzeppelin/access/Ownable.sol";
+import "../openzeppelin/proxy/Clones.sol";
+import "../openzeppelin/utils/ReentrancyGuard.sol";
+import "../openzeppelin/utils/Pausable.sol";
 
 /**
  * @title Foundry

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
+import "../../openzeppelin/contracts/utils/math/Math.sol";
 import "../interfaces/UniswapV3Interfaces.sol";
 
 library UniswapPoolCreator {
